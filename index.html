@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Sakura Dev — Parallel AI Teams</title>
+<title>Sakura Dev — Battle & Tutor AI</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
@@ -36,7 +36,6 @@
   .font-mono { font-family: 'JetBrains Mono', monospace; }
   html, body { height: 100%; margin: 0; background: var(--bg); color: var(--text); overflow: hidden; transition: background 0.3s, color 0.3s; }
   
-  /* Apple Ambient Glowing Orbs */
   .bg-orb { position: fixed; z-index: -1; pointer-events: none; border-radius: 50%; filter: blur(100px); opacity: 0.4; }
   .orb-1 { top: -10%; left: -5%; width: 50%; height: 50%; background: var(--accent); animation: float1 20s ease-in-out infinite; }
   .orb-2 { bottom: -10%; right: -5%; width: 50%; height: 50%; background: var(--accent-2); animation: float2 25s ease-in-out infinite; }
@@ -57,7 +56,6 @@
   .hero-bg { position: absolute; inset: 0; z-index: 0; background-image: url('https://media.istockphoto.com/id/1390815938/photo/tokyo-city-in-japan.jpg?s=612x612&w=0&k=20&c=VHiC3TlbXkb-Yf6WUYjh825Y0nGMCTkNUa9j8X8rVfY='); background-size: cover; background-position: center; filter: grayscale(20%) contrast(120%); }
   .hero-overlay { position: absolute; inset: 0; z-index: 1; background: var(--hero-overlay); }
 
-  /* Base Glass for UI Elements */
   .louis-glass {
     position: relative;
     background-color: var(--surface);
@@ -68,170 +66,60 @@
     box-shadow: inset 1px 1px 1px rgba(255, 255, 255, 0.15), inset -1px -1px 1px rgba(0, 0, 0, 0.1), 0 8px 32px rgba(0, 0, 0, 0.2);
   }
 
-  /* ===== USER PROVIDED BORDER GLOW CARD ===== */
-  @property --cursor-angle {
-    syntax: '<angle>';
-    initial-value: 0deg;
-    inherits: false;
-  }
-
-  @keyframes sweep {
-    to { --cursor-angle: 360deg; }
-  }
+  @property --cursor-angle { syntax: '<angle>'; initial-value: 0deg; inherits: false; }
+  @keyframes sweep { to { --cursor-angle: 360deg; } }
 
   .border-glow-card {
-    --edge-proximity: 100;
-    --cursor-angle: 45deg;
-    --edge-sensitivity: 0;
-    --color-sensitivity: 0;
-    --border-radius: 16px;
-    --glow-padding: 10px;
-    --cone-spread: 25;
+    --edge-proximity: 100; --cursor-angle: 45deg; --edge-sensitivity: 0; --color-sensitivity: 0;
+    --border-radius: 16px; --glow-padding: 10px; --cone-spread: 25;
     --card-bg: var(--card-bg);
-    --glow-color: hsl(268 84% 60% / 100%);
-    --glow-color-60: hsl(268 84% 60% / 60%);
-    --glow-color-50: hsl(192 84% 50% / 50%);
-    --glow-color-40: hsl(192 84% 50% / 40%);
-    --glow-color-30: hsl(349 84% 60% / 30%);
-    --glow-color-20: hsl(349 84% 60% / 20%);
-    --glow-color-10: hsl(268 84% 60% / 10%);
-
-    position: relative;
-    border-radius: var(--border-radius);
-    isolation: isolate;
-    transform: translate3d(0, 0, 0.01px);
-    display: flex;
-    flex-direction: column;
-    border: 1px solid rgb(255 255 255 / 15%);
-    background: var(--card-bg, #120F17);
-    overflow: visible;
-    box-shadow:
-      rgba(0, 0, 0, 0.1) 0px 1px 2px,
-      rgba(0, 0, 0, 0.1) 0px 2px 4px,
-      rgba(0, 0, 0, 0.1) 0px 4px 8px,
-      rgba(0, 0, 0, 0.1) 0px 8px 16px,
-      rgba(0, 0, 0, 0.1) 0px 16px 32px,
-      rgba(0, 0, 0, 0.1) 0px 32px 64px;
+    --glow-color: hsl(268 84% 60% / 100%); --glow-color-60: hsl(268 84% 60% / 60%); --glow-color-50: hsl(192 84% 50% / 50%); --glow-color-40: hsl(192 84% 50% / 40%); --glow-color-30: hsl(349 84% 60% / 30%); --glow-color-20: hsl(349 84% 60% / 20%); --glow-color-10: hsl(268 84% 60% / 10%);
+    position: relative; border-radius: var(--border-radius); isolation: isolate; transform: translate3d(0, 0, 0.01px);
+    display: flex; flex-direction: column; border: 1px solid rgb(255 255 255 / 15%); background: var(--card-bg, #120F17); overflow: visible;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 2px, rgba(0, 0, 0, 0.1) 0px 2px 4px, rgba(0, 0, 0, 0.1) 0px 4px 8px, rgba(0, 0, 0, 0.1) 0px 8px 16px, rgba(0, 0, 0, 0.1) 0px 16px 32px, rgba(0, 0, 0, 0.1) 0px 32px 64px;
   }
 
-  .border-glow-card::before,
-  .border-glow-card::after,
-  .border-glow-card > .edge-light {
-    content: "";
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    transition: opacity 0.25s ease-out;
-    z-index: -1;
+  .border-glow-card::before, .border-glow-card::after, .border-glow-card > .edge-light {
+    content: ""; position: absolute; inset: 0; border-radius: inherit; transition: opacity 0.25s ease-out; z-index: -1;
   }
 
-  .border-glow-card:not(:hover):not(.sweep-active)::before,
-  .border-glow-card:not(:hover):not(.sweep-active)::after,
-  .border-glow-card:not(:hover):not(.sweep-active) > .edge-light {
-    opacity: 0;
-    transition: opacity 0.75s ease-in-out;
+  .border-glow-card:not(:hover):not(.sweep-active)::before, .border-glow-card:not(:hover):not(.sweep-active)::after, .border-glow-card:not(:hover):not(.sweep-active) > .edge-light {
+    opacity: 0; transition: opacity 0.75s ease-in-out;
   }
 
   .border-glow-card::before {
     border: 1px solid transparent;
-    background:
-      linear-gradient(var(--card-bg, #120F17) 0 100%) padding-box,
-      linear-gradient(rgb(255 255 255 / 0%) 0% 100%) border-box,
-      var(--gradient-one, radial-gradient(at 80% 55%, hsla(268, 100%, 76%, 1) 0px, transparent 50%)) border-box,
-      var(--gradient-two, radial-gradient(at 69% 34%, hsla(349, 100%, 74%, 1) 0px, transparent 50%)) border-box,
-      var(--gradient-three, radial-gradient(at 8% 6%, hsla(136, 100%, 78%, 1) 0px, transparent 50%)) border-box,
-      var(--gradient-four, radial-gradient(at 41% 38%, hsla(192, 100%, 64%, 1) 0px, transparent 50%)) border-box,
-      var(--gradient-five, radial-gradient(at 86% 85%, hsla(186, 100%, 74%, 1) 0px, transparent 50%)) border-box,
-      var(--gradient-six, radial-gradient(at 82% 18%, hsla(52, 100%, 65%, 1) 0px, transparent 50%)) border-box,
-      var(--gradient-seven, radial-gradient(at 51% 4%, hsla(12, 100%, 72%, 1) 0px, transparent 50%)) border-box,
-      var(--gradient-base, linear-gradient(#c299ff 0 100%)) border-box;
-
+    background: linear-gradient(var(--card-bg, #120F17) 0 100%) padding-box, linear-gradient(rgb(255 255 255 / 0%) 0% 100%) border-box, var(--gradient-one, radial-gradient(at 80% 55%, hsla(268, 100%, 76%, 1) 0px, transparent 50%)) border-box, var(--gradient-two, radial-gradient(at 69% 34%, hsla(349, 100%, 74%, 1) 0px, transparent 50%)) border-box, var(--gradient-three, radial-gradient(at 8% 6%, hsla(136, 100%, 78%, 1) 0px, transparent 50%)) border-box, var(--gradient-four, radial-gradient(at 41% 38%, hsla(192, 100%, 64%, 1) 0px, transparent 50%)) border-box, var(--gradient-five, radial-gradient(at 86% 85%, hsla(186, 100%, 74%, 1) 0px, transparent 50%)) border-box, var(--gradient-six, radial-gradient(at 82% 18%, hsla(52, 100%, 65%, 1) 0px, transparent 50%)) border-box, var(--gradient-seven, radial-gradient(at 51% 4%, hsla(12, 100%, 72%, 1) 0px, transparent 50%)) border-box, var(--gradient-base, linear-gradient(#c299ff 0 100%)) border-box;
     opacity: calc((var(--edge-proximity) - var(--color-sensitivity)) / (100 - var(--color-sensitivity)));
-
-    mask-image:
-      conic-gradient(
-        from var(--cursor-angle) at center,
-        black calc(var(--cone-spread) * 1%),
-        transparent calc((var(--cone-spread) + 15) * 1%),
-        transparent calc((100 - var(--cone-spread) - 15) * 1%),
-        black calc((100 - var(--cone-spread)) * 1%)
-      );
+    mask-image: conic-gradient(from var(--cursor-angle) at center, black calc(var(--cone-spread) * 1%), transparent calc((var(--cone-spread) + 15) * 1%), transparent calc((100 - var(--cone-spread) - 15) * 1%), black calc((100 - var(--cone-spread)) * 1%));
   }
 
   .border-glow-card::after {
     border: 1px solid transparent;
-    background:
-      var(--gradient-one, radial-gradient(at 80% 55%, hsla(268, 100%, 76%, 1) 0px, transparent 50%)) padding-box,
-      var(--gradient-two, radial-gradient(at 69% 34%, hsla(349, 100%, 74%, 1) 0px, transparent 50%)) padding-box,
-      var(--gradient-three, radial-gradient(at 8% 6%, hsla(136, 100%, 78%, 1) 0px, transparent 50%)) padding-box,
-      var(--gradient-four, radial-gradient(at 41% 38%, hsla(192, 100%, 64%, 1) 0px, transparent 50%)) padding-box,
-      var(--gradient-five, radial-gradient(at 86% 85%, hsla(186, 100%, 74%, 1) 0px, transparent 50%)) padding-box,
-      var(--gradient-six, radial-gradient(at 82% 18%, hsla(52, 100%, 65%, 1) 0px, transparent 50%)) padding-box,
-      var(--gradient-seven, radial-gradient(at 51% 4%, hsla(12, 100%, 72%, 1) 0px, transparent 50%)) padding-box,
-      var(--gradient-base, linear-gradient(#c299ff 0 100%)) padding-box;
-
-    mask-image:
-      linear-gradient(to bottom, black, black),
-      radial-gradient(ellipse at 50% 50%, black 40%, transparent 65%),
-      radial-gradient(ellipse at 66% 66%, black 5%, transparent 40%),
-      radial-gradient(ellipse at 33% 33%, black 5%, transparent 40%),
-      radial-gradient(ellipse at 66% 33%, black 5%, transparent 40%),
-      radial-gradient(ellipse at 33% 66%, black 5%, transparent 40%),
-      conic-gradient(from var(--cursor-angle) at center, transparent 5%, black 15%, black 85%, transparent 95%);
-
+    background: var(--gradient-one, radial-gradient(at 80% 55%, hsla(268, 100%, 76%, 1) 0px, transparent 50%)) padding-box, var(--gradient-two, radial-gradient(at 69% 34%, hsla(349, 100%, 74%, 1) 0px, transparent 50%)) padding-box, var(--gradient-three, radial-gradient(at 8% 6%, hsla(136, 100%, 78%, 1) 0px, transparent 50%)) padding-box, var(--gradient-four, radial-gradient(at 41% 38%, hsla(192, 100%, 64%, 1) 0px, transparent 50%)) padding-box, var(--gradient-five, radial-gradient(at 86% 85%, hsla(186, 100%, 74%, 1) 0px, transparent 50%)) padding-box, var(--gradient-six, radial-gradient(at 82% 18%, hsla(52, 100%, 65%, 1) 0px, transparent 50%)) padding-box, var(--gradient-seven, radial-gradient(at 51% 4%, hsla(12, 100%, 72%, 1) 0px, transparent 50%)) padding-box, var(--gradient-base, linear-gradient(#c299ff 0 100%)) padding-box;
+    mask-image: linear-gradient(to bottom, black, black), radial-gradient(ellipse at 50% 50%, black 40%, transparent 65%), radial-gradient(ellipse at 66% 66%, black 5%, transparent 40%), radial-gradient(ellipse at 33% 33%, black 5%, transparent 40%), radial-gradient(ellipse at 66% 33%, black 5%, transparent 40%), radial-gradient(ellipse at 33% 66%, black 5%, transparent 40%), conic-gradient(from var(--cursor-angle) at center, transparent 5%, black 15%, black 85%, transparent 95%);
     mask-composite: subtract, add, add, add, add, add;
     opacity: calc(var(--fill-opacity, 0.5) * (var(--edge-proximity) - var(--color-sensitivity)) / (100 - var(--color-sensitivity)));
     mix-blend-mode: soft-light;
   }
 
   .border-glow-card > .edge-light {
-    inset: calc(var(--glow-padding) * -1);
-    pointer-events: none;
-    z-index: 1;
-
-    mask-image:
-      conic-gradient(
-        from var(--cursor-angle) at center, black 2.5%, transparent 10%, transparent 90%, black 97.5%
-      );
-
+    inset: calc(var(--glow-padding) * -1); pointer-events: none; z-index: 1;
+    mask-image: conic-gradient(from var(--cursor-angle) at center, black 2.5%, transparent 10%, transparent 90%, black 97.5%);
     opacity: calc((var(--edge-proximity) - var(--edge-sensitivity)) / (100 - var(--edge-sensitivity)));
     mix-blend-mode: plus-lighter;
   }
 
   .border-glow-card > .edge-light::before {
-    content: "";
-    position: absolute;
-    inset: var(--glow-padding);
-    border-radius: inherit;
-    box-shadow:
-      inset 0 0 0 1px var(--glow-color, hsl(40deg 80% 80% / 100%)),
-      inset 0 0 1px 0 var(--glow-color-60, hsl(40deg 80% 80% / 60%)),
-      inset 0 0 3px 0 var(--glow-color-50, hsl(40deg 80% 80% / 50%)),
-      inset 0 0 6px 0 var(--glow-color-40, hsl(40deg 80% 80% / 40%)),
-      inset 0 0 15px 0 var(--glow-color-30, hsl(40deg 80% 80% / 30%)),
-      inset 0 0 25px 2px var(--glow-color-20, hsl(40deg 80% 80% / 20%)),
-      inset 0 0 50px 2px var(--glow-color-10, hsl(40deg 80% 80% / 10%)),
-      0 0 1px 0 var(--glow-color-60, hsl(40deg 80% 80% / 60%)),
-      0 0 3px 0 var(--glow-color-50, hsl(40deg 80% 80% / 50%)),
-      0 0 6px 0 var(--glow-color-40, hsl(40deg 80% 80% / 40%)),
-      0 0 15px 0 var(--glow-color-30, hsl(40deg 80% 80% / 30%)),
-      0 0 25px 2px var(--glow-color-20, hsl(40deg 80% 80% / 20%)),
-      0 0 50px 2px var(--glow-color-10, hsl(40deg 80% 80% / 10%));
+    content: ""; position: absolute; inset: var(--glow-padding); border-radius: inherit;
+    box-shadow: inset 0 0 0 1px var(--glow-color, hsl(40deg 80% 80% / 100%)), inset 0 0 1px 0 var(--glow-color-60, hsl(40deg 80% 80% / 60%)), inset 0 0 3px 0 var(--glow-color-50, hsl(40deg 80% 80% / 50%)), inset 0 0 6px 0 var(--glow-color-40, hsl(40deg 80% 80% / 40%)), inset 0 0 15px 0 var(--glow-color-30, hsl(40deg 80% 80% / 30%)), inset 0 0 25px 2px var(--glow-color-20, hsl(40deg 80% 80% / 20%)), inset 0 0 50px 2px var(--glow-color-10, hsl(40deg 80% 80% / 10%)), 0 0 1px 0 var(--glow-color-60, hsl(40deg 80% 80% / 60%)), 0 0 3px 0 var(--glow-color-50, hsl(40deg 80% 80% / 50%)), 0 0 6px 0 var(--glow-color-40, hsl(40deg 80% 80% / 40%)), 0 0 15px 0 var(--glow-color-30, hsl(40deg 80% 80% / 30%)), 0 0 25px 2px var(--glow-color-20, hsl(40deg 80% 80% / 20%)), 0 0 50px 2px var(--glow-color-10, hsl(40deg 80% 80% / 10%));
   }
 
   .border-glow-inner {
-    display: flex;
-    flex-direction: column;
-    position: relative;
-    overflow: hidden;
-    z-index: 1;
-    border-radius: inherit;
-    height: 100%;
+    display: flex; flex-direction: column; position: relative; overflow: hidden; z-index: 1; border-radius: inherit; height: 100%;
   }
 
-  .border-glow-card.sweep-active::before,
-  .border-glow-card.sweep-active::after,
-  .border-glow-card.sweep-active > .edge-light {
+  .border-glow-card.sweep-active::before, .border-glow-card.sweep-active::after, .border-glow-card.sweep-active > .edge-light {
     animation: sweep 4s linear infinite;
   }
 
@@ -282,13 +170,70 @@
   .status-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--muted); }
   .status-dot.active { background: var(--accent-2); box-shadow: 0 0 6px var(--accent-2); }
 
-  .mobile-nav { position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%); width: calc(100% - 32px); max-width: 400px; height: 56px; border: 1px solid var(--border); display: flex; justify-content: space-around; align-items: center; z-index: 40; background: var(--surface); backdrop-filter: blur(30px); border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+  .mobile-nav { position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%); width: calc(100% - 32px); max-width: 400px; height: 56px; border: 1px solid var(--border); display: flex; justify-content: space-around; align-items: center; z-index: 60; background: var(--surface); backdrop-filter: blur(30px); border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
   .mobile-nav button { color: var(--muted); font-size: 10px; display: flex; flex-direction: column; align-items: center; gap: 2px; background: none; border: none; cursor: pointer; transition: color 0.2s; }
   .mobile-nav button.active { color: var(--accent); }
   .mobile-nav button i { font-size: 18px; }
   
-  /* Fix for mobile overlap */
-  #chatInputWrapper { padding-bottom: 10px; }
+  /* ELI5 Tutor Note */
+  .tutor-note {
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.15), rgba(34, 211, 238, 0.05));
+    border: 1px solid rgba(139, 92, 246, 0.3);
+    border-left: 4px solid var(--accent);
+    border-radius: 12px;
+    padding: 10px 14px;
+    margin: 8px 0;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.4;
+  }
+  .tutor-note i { color: var(--accent); font-size: 16px; margin-top: 2px; }
+
+  /* Battle Mode UI */
+  .battle-container { display: flex; gap: 16px; width: 100%; }
+  @media (max-width: 768px) { .battle-container { flex-direction: column; } }
+  .battle-card { 
+    flex: 1; 
+    border: 1px solid var(--border); 
+    border-radius: 16px; 
+    padding: 12px; 
+    background: var(--chat-bubble-ai); 
+    display: flex; 
+    flex-direction: column; 
+    gap: 8px;
+    position: relative;
+    overflow: hidden;
+  }
+  .battle-card .battle-header {
+    display: flex; justify-content: space-between; align-items: center;
+    border-bottom: 1px solid var(--border); padding-bottom: 8px; margin-bottom: 8px;
+  }
+  .battle-card .battle-header span { font-size: 12px; font-weight: 600; color: var(--accent-2); }
+  .battle-card .battle-content { font-size: 13px; line-height: 1.5; max-height: 400px; overflow-y: auto; }
+  .battle-card .keep-btn { 
+    margin-top: auto; 
+    background: var(--accent); 
+    color: white; 
+    border: none; 
+    padding: 8px; 
+    border-radius: 8px; 
+    font-size: 12px; 
+    font-weight: 600; 
+    cursor: pointer;
+    transition: 0.2s;
+  }
+  .battle-card .keep-btn:hover { background: var(--accent-2); color: #000; }
+
+  #chatInputWrapper { 
+    padding-bottom: 10px; 
+    position: relative; 
+    z-index: 20; 
+    background: var(--card-bg, #120F17); 
+    border-top: 1px solid var(--border);
+  }
   @media (max-width: 767px) {
     #chatInputWrapper { padding-bottom: 80px; } 
   }
@@ -297,7 +242,6 @@
 </head>
 <body>
 
-<!-- Ambient Orbs -->
 <div class="bg-orb orb-1"></div>
 <div class="bg-orb orb-2"></div>
 <div class="bg-orb orb-3"></div>
@@ -339,17 +283,19 @@
       <div class="border-glow-inner flex flex-col min-h-0">
         <div class="h-14 flex items-center justify-between px-4 border-b flex-shrink-0" style="border-color: var(--border);">
           <button id="homeBtn" class="btn-icon" title="Back to Home"><i class="fa-solid fa-arrow-left text-sm"></i></button>
-          <div class="flex gap-2">
+          <div class="flex gap-2 items-center">
             <button class="chip active" data-mode="coding">Coding</button>
             <button class="chip" data-mode="motion">Motion</button>
+            <button id="battleToggleBtn" class="chip" title="A/B Battle Mode"><i class="fa-solid fa-bolt"></i> Battle</button>
           </div>
           <div class="flex gap-2">
+            <button id="projectsBtn" class="btn-icon" title="Projects"><i class="fa-solid fa-folder text-sm"></i></button>
             <button id="themeToggleBuilder" class="btn-icon" title="Toggle Theme"><i class="fa-solid fa-sun text-sm"></i></button>
             <button id="builderSettingsBtn" class="btn-icon" title="Settings"><i class="fa-solid fa-gear text-sm"></i></button>
           </div>
         </div>
         <div id="chatScroll" class="flex-1 overflow-y-auto p-5 space-y-6 hide-scrollbar min-h-0" style="padding-bottom: 80px;"></div>
-        <div id="chatInputWrapper" class="p-3 border-t flex-shrink-0 relative" style="border-color: var(--border);">
+        <div id="chatInputWrapper" class="p-3 flex-shrink-0 relative">
           <div id="mentionDropdown" class="mention-dropdown hidden"></div>
           <div class="louis-glass rounded-2xl p-2 flex flex-col">
             <div id="imagePreviewContainer" class="flex gap-2 p-2 hidden"></div>
@@ -379,6 +325,7 @@
             <button id="tabHistory" class="chip">History</button>
           </div>
           <div class="flex items-center gap-2">
+            <button id="tutorToggleBtn" class="chip" title="Toggle ELI5 Tutor Mode"><i class="fa-solid fa-graduation-cap"></i> Tutor</button>
             <div id="previewTools" class="hidden md:flex gap-1">
               <button class="btn-icon" data-device="desktop" title="Desktop"><i class="fa-solid fa-desktop text-xs"></i></button>
               <button class="btn-icon" data-device="mobile" title="Mobile"><i class="fa-solid fa-mobile-screen text-xs"></i></button>
@@ -439,7 +386,6 @@
     </div>
   </div>
   
-  <!-- Floating Mobile Nav -->
   <div class="mobile-nav md:hidden">
     <button id="mNavChat" class="active"><i class="fa-solid fa-comment-dots"></i><span>Chat</span></button>
     <button id="mNavPreview"><i class="fa-solid fa-eye"></i><span>Preview</span></button>
@@ -471,19 +417,32 @@
   </div>
 </div>
 
-<script>
-console.log("Sakura Dev script loaded.");
+<!-- PROJECTS MODAL -->
+<div id="projectsModal" class="hidden modal-bg">
+  <div class="modal-card louis-glass">
+    <div class="flex justify-between items-center mb-6">
+      <h2 class="text-xl font-bold">Projects</h2>
+      <button id="closeProjectsBtn" class="btn-icon"><i class="fa-solid fa-xmark text-lg"></i></button>
+    </div>
+    <div class="flex gap-3 mb-6">
+      <button id="newProjectBtn" class="chip active flex-1 justify-center"><i class="fa-solid fa-plus"></i> New Project</button>
+      <button id="saveProjectBtn" class="chip flex-1 justify-center"><i class="fa-solid fa-save"></i> Save Current</button>
+    </div>
+    <div id="projectList" class="space-y-3"></div>
+  </div>
+</div>
 
+<script>
 var state = {
   view: 'hero', mode: 'coding', messages: [], files: {}, versions: [], activeFile: null,
   isGenerating: false, abortController: null, selectedModel: 'openai-fast',
   agents: [], pendingImages: [], pinnedFiles: [], auto: false, critic: false, heal: false,
-  activityLog: [], activeTab: 'preview', mobileView: 'chat'
+  activityLog: [], activeTab: 'preview', mobileView: 'chat',
+  projects: [], battleMode: false, tutorMode: false
 };
 
 var scriptStart = '<' + 'script>';
 var scriptEnd = '<' + '/script>';
-
 var currentStrandRaf = null;
 
 function getSystemPrompt(agentId) {
@@ -491,26 +450,34 @@ function getSystemPrompt(agentId) {
   if (!agent) return "You are a helpful AI.";
   
   var prompt = (agent.prompt || "You are a helpful AI.") + "\n\n";
-  var teamList = "Active Team Members:\n";
   var activeAgents = state.agents.filter(function(a) { return a.isActive; });
   var availableSubs = activeAgents.filter(function(a) { return a.role === 'sub' && !a.pingOnly; });
+  var leadAgent = activeAgents.find(function(a) { return a.role === 'lead'; });
+  var leadName = (leadAgent && leadAgent.name) ? leadAgent.name : 'Lead Agent';
   
-  if (agent.role === 'lead' && availableSubs.length > 0) {
-    prompt += "You are the Lead Agent. Break down the project into tasks using `[todo: Task 1, Task 2]`.\n";
-    prompt += "Delegate each task to a Sub-Agent using EXACTLY this format: `[DELEGATE: Agent Name: Task Description]`.\n";
-    prompt += "CRITICAL: You can use MULTIPLE `[DELEGATE: ...]` blocks in a single response to make agents work IN PARALLEL (at the same time).\n";
-    prompt += "When Sub-Agents report back with `@LeadAgent:`, you MUST review their code for bugs or errors.\n";
-    prompt += "- If the code is correct, output `[done: task_index]` to tick off the task.\n";
-    prompt += "- If it has bugs, output another `[DELEGATE: AgentName: Fix the bug...]` to send it back.\n";
-    prompt += "Do NOT write the final code yourself until ALL tasks are `[done]`. Once all tasks are done, output the final integrated code in ```html blocks.\n";
-    prompt += "Team Members available for delegation:\n";
-    availableSubs.forEach(function(a) { teamList += "- " + (a.name || 'Agent') + "\n"; });
-    prompt += teamList;
-  } else {
-    prompt += "You are a Sub-Agent. Focus only on your specific task. When you finish, you MUST start your response with `@LeadAgent:` and provide your code in ```html blocks.";
+  if (agent.role === 'lead') {
+    if (availableSubs.length > 0) {
+      prompt += "You are the Lead Agent (" + agent.name + "). Break down the project into tasks using `[todo: Task 1, Task 2]`.\n";
+      prompt += "Delegate each task to a Sub-Agent using EXACTLY this format: `[DELEGATE: Agent Name: Task Description]`.\n";
+      prompt += "CRITICAL: You can use MULTIPLE `[DELEGATE: ...]` blocks in a single response to make agents work IN PARALLEL.\n";
+      prompt += "When Sub-Agents report back with `@" + agent.name + ":`, you MUST review their code for bugs.\n";
+      prompt += "- If correct, output `[done: task_index]`.\n- If bugs, output another `[DELEGATE: AgentName: Fix...]`.\n";
+      prompt += "Do NOT write final code until ALL tasks are `[done]`.\n";
+      prompt += "Team Members:\n";
+      availableSubs.forEach(function(a) { prompt += "- " + (a.name || 'Agent') + "\n"; });
+    } else {
+      prompt += "You are the Lead Agent, but no Sub-Agents are active. Do all work yourself.";
+    }
+  } else if (agent.role === 'sub') {
+    prompt += "You are a Sub-Agent (" + agent.name + "). Focus only on your task. When finished, start with `@" + leadName + ":` and provide code in ```html blocks.";
   }
 
-  prompt += "\n\nCRITICAL FORMATTING RULES:\n1. ASK QUESTIONS if vague. Use [options: A | B | C] for single choice, [multioptions: A | B | C] for multi-choice, or [input: Placeholder] for text input.\n2. PLAN WORK: Before writing code, output a plan: [todo: Step 1, Step 2, Step 3]\n3. UPDATE PROGRESS: When starting a step output [doing: 1], when finished output [done: 1].\n4. OUTPUT CODE in ```html, ```css, ```js blocks.\n5. If you need to see console errors to fix a bug, output exactly [GET_CONSOLE].";
+  prompt += "\n\nCRITICAL FORMATTING RULES:\n1. ASK QUESTIONS if vague. Use [options: A | B | C] or [input: Placeholder].\n2. PLAN WORK: [todo: Step 1, Step 2]\n3. UPDATE PROGRESS: [doing: 1], [done: 1].\n4. OUTPUT CODE in ```html, ```css, ```js blocks.\n5. If you need console errors, output [GET_CONSOLE].";
+  
+  if (state.tutorMode) {
+    prompt += "\n6. TUTOR MODE ENABLED: Before EVERY code block, you MUST output a block like: [TUTOR: Plain English explanation of what the following code does and why].";
+  }
+  
   return prompt;
 }
 
@@ -523,14 +490,7 @@ function renderStatus() {
   var list = document.getElementById('statusList');
   if (!list) return;
   list.innerHTML = state.activityLog.map(function(log) {
-    return '<div class="status-item">' +
-      '<div class="status-dot active"></div>' +
-      '<div class="flex-1">' +
-        '<span class="font-semibold" style="color: var(--accent-2);">' + log.agentName + '</span> ' +
-        '<span style="color: var(--text);">' + log.text + '</span>' +
-      '</div>' +
-      '<span class="text-xs" style="color: var(--muted);">' + log.time + '</span>' +
-    '</div>';
+    return '<div class="status-item"><div class="status-dot active"></div><div class="flex-1"><span class="font-semibold" style="color: var(--accent-2);">' + log.agentName + '</span> <span style="color: var(--text);">' + log.text + '</span></div><span class="text-xs" style="color: var(--muted);">' + log.time + '</span></div>';
   }).join('');
 }
 
@@ -540,20 +500,18 @@ function init() {
     setupModels();
     setupEvents();
     loadLocal();
+    loadProjects();
     renderAgentsSettings();
     setupConsoleInterceptor();
     setMobileView('chat');
-  } catch(e) {
-    console.error("Init Error:", e);
-  }
+  } catch(e) { console.error("Init Error:", e); }
 }
 
 function loadTheme() {
   var theme = localStorage.getItem('sakura_theme') || 'dark';
   document.documentElement.setAttribute('data-theme', theme);
   var icon = theme === 'light' ? 'fa-moon' : 'fa-sun';
-  var toggles = document.querySelectorAll('#themeToggleHero i, #themeToggleBuilder i');
-  toggles.forEach(function(i) { i.className = 'fa-solid ' + icon; });
+  document.querySelectorAll('#themeToggleHero i, #themeToggleBuilder i').forEach(function(i) { i.className = 'fa-solid ' + icon; });
 }
 
 function toggleTheme() {
@@ -562,8 +520,7 @@ function toggleTheme() {
   document.documentElement.setAttribute('data-theme', next);
   localStorage.setItem('sakura_theme', next);
   var icon = next === 'light' ? 'fa-moon' : 'fa-sun';
-  var toggles = document.querySelectorAll('#themeToggleHero i, #themeToggleBuilder i');
-  toggles.forEach(function(i) { i.className = 'fa-solid ' + icon; });
+  document.querySelectorAll('#themeToggleHero i, #themeToggleBuilder i').forEach(function(i) { i.className = 'fa-solid ' + icon; });
 }
 
 function setupModels() {
@@ -597,13 +554,22 @@ function setupEvents() {
   document.getElementById('themeToggleHero').addEventListener('click', toggleTheme);
   document.getElementById('themeToggleBuilder').addEventListener('click', toggleTheme);
 
-  var modeBtns = document.querySelectorAll('[data-mode]');
-  modeBtns.forEach(function(b) {
+  document.querySelectorAll('[data-mode]').forEach(function(b) {
     b.addEventListener('click', function() {
       state.mode = b.dataset.mode;
-      modeBtns.forEach(function(x) { x.classList.toggle('active', x.dataset.mode === state.mode); });
+      document.querySelectorAll('[data-mode]').forEach(function(x) { x.classList.toggle('active', x.dataset.mode === state.mode); });
       saveLocal();
     });
+  });
+
+  // Toggles
+  document.getElementById('battleToggleBtn').addEventListener('click', function() {
+    state.battleMode = !state.battleMode;
+    this.classList.toggle('active');
+  });
+  document.getElementById('tutorToggleBtn').addEventListener('click', function() {
+    state.tutorMode = !state.tutorMode;
+    this.classList.toggle('active');
   });
 
   document.getElementById('heroSettingsBtn').addEventListener('click', openSettings);
@@ -618,13 +584,20 @@ function setupEvents() {
     renderAgentsSettings(); saveLocal();
   });
 
-  var tabs = ['Preview', 'Code', 'Status', 'Console', 'Terminal', 'Assets', 'History'];
-  tabs.forEach(function(t) {
+  document.getElementById('projectsBtn').addEventListener('click', function() {
+    renderProjects();
+    document.getElementById('projectsModal').classList.remove('hidden');
+  });
+  document.getElementById('closeProjectsBtn').addEventListener('click', function() { document.getElementById('projectsModal').classList.add('hidden'); });
+  document.getElementById('projectsModal').addEventListener('click', function(e) { if (e.target.id === 'projectsModal') document.getElementById('projectsModal').classList.add('hidden'); });
+  document.getElementById('newProjectBtn').addEventListener('click', newProject);
+  document.getElementById('saveProjectBtn').addEventListener('click', saveProject);
+
+  ['Preview', 'Code', 'Status', 'Console', 'Terminal', 'Assets', 'History'].forEach(function(t) {
     document.getElementById('tab' + t).addEventListener('click', function() { setTab(t.toLowerCase()); });
   });
   
-  var devices = document.querySelectorAll('[data-device]');
-  devices.forEach(function(b) {
+  document.querySelectorAll('[data-device]').forEach(function(b) {
     b.addEventListener('click', function() {
       var frame = document.getElementById('previewFrame');
       frame.className = 'bg-white border-none rounded-xl';
@@ -633,12 +606,9 @@ function setupEvents() {
   });
 
   document.getElementById('deployBtn').addEventListener('click', function() {
-    var html = state.files['index.html'] || '';
-    var css = state.files['style.css'] || '';
-    var js = state.files['script.js'] || '';
+    var html = state.files['index.html'] || '', css = state.files['style.css'] || '', js = state.files['script.js'] || '';
     var doc = html.includes('<!DOCTYPE') ? html : '<!DOCTYPE html><html><head><style>' + css + '</style></head><body>' + html + scriptStart + js + scriptEnd + '</body></html>';
-    var url = 'data:text/html;charset=utf-8,' + encodeURIComponent(doc);
-    window.open(url, '_blank');
+    window.open('data:text/html;charset=utf-8,' + encodeURIComponent(doc), '_blank');
   });
 
   document.getElementById('terminalInput').addEventListener('keydown', function(e) {
@@ -688,38 +658,79 @@ function setupEvents() {
   document.getElementById('mNavTools').addEventListener('click', function() { setMobileView('right', 'status'); });
 }
 
+function loadProjects() {
+  try { state.projects = JSON.parse(localStorage.getItem('sakura_projects')) || []; } catch(e) { state.projects = []; }
+}
+
+function renderProjects() {
+  var list = document.getElementById('projectList');
+  if (state.projects.length === 0) {
+    list.innerHTML = '<div class="text-center text-sm" style="color: var(--muted);">No saved projects yet.</div>';
+    return;
+  }
+  list.innerHTML = state.projects.map(function(proj) {
+    return '<div class="agent-card-settings flex items-center justify-between cursor-pointer" data-load="' + proj.id + '">' +
+      '<div><div class="text-sm font-medium">' + proj.name + '</div><div class="text-xs" style="color: var(--muted);">' + new Date(proj.id.replace('proj-', '') * 1).toLocaleString() + '</div></div>' +
+      '<div class="flex gap-2"><button class="btn-icon" data-load="' + proj.id + '"><i class="fa-solid fa-folder-open text-xs"></i></button><button class="btn-icon" data-del-proj="' + proj.id + '"><i class="fa-solid fa-trash text-xs"></i></button></div>' +
+    '</div>';
+  }).join('');
+  list.querySelectorAll('[data-load]').forEach(function(el) {
+    el.addEventListener('click', function(e) {
+      if (e.target.closest('[data-del-proj]')) return;
+      loadProject(el.dataset.load);
+    });
+  });
+  list.querySelectorAll('[data-del-proj]').forEach(function(el) {
+    el.addEventListener('click', function(e) {
+      e.stopPropagation();
+      var id = el.dataset.delProj;
+      state.projects = state.projects.filter(function(p) { return p.id !== id; });
+      localStorage.setItem('sakura_projects', JSON.stringify(state.projects));
+      renderProjects();
+    });
+  });
+}
+
+function saveProject() {
+  var name = prompt("Project Name:", "Project " + new Date().toLocaleString());
+  if (!name) return;
+  var proj = { id: 'proj-' + Date.now(), name: name, messages: state.messages, files: state.files, versions: state.versions };
+  state.projects = state.projects.filter(function(p) { return p.id !== proj.id; });
+  state.projects.push(proj);
+  localStorage.setItem('sakura_projects', JSON.stringify(state.projects));
+  renderProjects();
+}
+
+function loadProject(id) {
+  var proj = state.projects.find(function(p) { return p.id === id; });
+  if (!proj) return;
+  state.messages = proj.messages || []; state.files = proj.files || {}; state.versions = proj.versions || [];
+  renderChat(); renderFileTree(); updatePreview(); setTab('preview');
+  document.getElementById('projectsModal').classList.add('hidden');
+}
+
+function newProject() {
+  state.messages = []; state.files = {}; state.versions = [];
+  renderChat(); renderFileTree(); updatePreview();
+  document.getElementById('projectsModal').classList.add('hidden');
+}
+
 function setMobileView(view, tab) {
-  state.mobileView = view;
-  if (tab) state.activeTab = tab;
-  
-  var left = document.getElementById('leftPanel');
-  var right = document.getElementById('rightPanel');
-  var mNavBtns = document.querySelectorAll('.mobile-nav button');
-  
-  mNavBtns.forEach(function(b) { b.classList.remove('active'); });
-  
+  state.mobileView = view; if (tab) state.activeTab = tab;
+  var left = document.getElementById('leftPanel'), right = document.getElementById('rightPanel');
+  document.querySelectorAll('.mobile-nav button').forEach(function(b) { b.classList.remove('active'); });
   if (window.innerWidth < 768) {
     if (view === 'chat') {
-      left.classList.remove('hidden');
-      left.style.width = '100%';
-      right.classList.add('hidden');
+      left.classList.remove('hidden'); left.style.width = '100%'; right.classList.add('hidden');
       document.getElementById('mNavChat').classList.add('active');
     } else {
-      left.classList.add('hidden');
-      right.classList.remove('hidden');
-      right.style.width = '100%';
+      left.classList.add('hidden'); right.classList.remove('hidden'); right.style.width = '100%';
       if (tab) setTab(tab);
-      if (view === 'right' && (tab === 'preview' || tab === 'code')) {
-         document.querySelector('#mNav' + (tab.charAt(0).toUpperCase() + tab.slice(1))).classList.add('active');
-      } else {
-         document.getElementById('mNavTools').classList.add('active');
-      }
+      if (view === 'right' && (tab === 'preview' || tab === 'code')) document.querySelector('#mNav' + (tab.charAt(0).toUpperCase() + tab.slice(1))).classList.add('active');
+      else document.getElementById('mNavTools').classList.add('active');
     }
   } else {
-    left.classList.remove('hidden');
-    right.classList.remove('hidden');
-    left.style.width = '40%';
-    right.style.width = '60%';
+    left.classList.remove('hidden'); right.classList.remove('hidden'); left.style.width = '40%'; right.style.width = '60%';
     if (tab) setTab(tab);
   }
 }
@@ -746,9 +757,7 @@ function handleFieldChange(e) {
         state.agents.forEach(function(o) { if (o.id !== ag.id && o.role === 'lead') o.role = 'sub'; });
         renderAgentsSettings();
       }
-      if (e.target.dataset.field === 'pingOnly') {
-        ag.pingOnly = (e.target.value === 'true');
-      }
+      if (e.target.dataset.field === 'pingOnly') ag.pingOnly = (e.target.value === 'true');
     }
     saveLocal();
   }
@@ -756,68 +765,28 @@ function handleFieldChange(e) {
 
 function renderAgentsSettings() {
   var list = document.getElementById('agentListSettings');
-  if (state.agents.length === 0) {
-    state.agents.push({ id: 'def-1', name: 'Sakura AI', pfp: '', model: state.selectedModel, prompt: 'You are an elite AI web developer.', role: 'lead', isActive: true, pingOnly: false });
-  }
-  
+  if (state.agents.length === 0) state.agents.push({ id: 'def-1', name: 'Sakura AI', pfp: '', model: state.selectedModel, prompt: 'You are an elite AI web developer.', role: 'lead', isActive: true, pingOnly: false });
   list.innerHTML = state.agents.map(function(a) {
-    var safeName = a.name || '';
-    var safePrompt = a.prompt || '';
+    var safeName = a.name || '', safePrompt = a.prompt || '';
     var pfpSrc = a.pfp || ('https://placehold.co/40x40/18181b/71717a?text=' + encodeURIComponent(safeName.charAt(0) || 'A'));
-    return '<div class="agent-card-settings">' +
-      '<div class="flex items-center gap-3 mb-3">' +
-        '<img src="' + pfpSrc + '" class="pfp-preview" id="pfp-' + a.id + '">' +
-        '<div class="flex-1">' +
-          '<div class="flex items-center gap-2 mb-2">' +
-            '<input type="text" value="' + safeName.replace(/"/g, '&quot;') + '" data-field="name" data-id="' + a.id + '" class="input-field" placeholder="Agent Name" style="font-size: 14px; padding: 8px 12px;">' +
-            '<label class="switch"><input type="checkbox" data-field="isActive" data-id="' + a.id + '" ' + (a.isActive ? 'checked' : '') + '><span class="slider"></span></label>' +
-          '</div>' +
-          '<div class="flex gap-2 items-center">' +
-            '<select data-field="role" data-id="' + a.id + '" class="input-field" style="width: auto; font-size: 12px; padding: 6px;">' +
-              '<option value="lead" ' + (a.role === 'lead' ? 'selected' : '') + '>Lead</option>' +
-              '<option value="sub" ' + (a.role === 'sub' ? 'selected' : '') + '>Sub</option>' +
-            '</select>' +
-            '<select data-field="pingOnly" data-id="' + a.id + '" class="input-field" style="width: auto; font-size: 12px; padding: 6px;">' +
-              '<option value="false" ' + (!a.pingOnly ? 'selected' : '') + '>Auto</option>' +
-              '<option value="true" ' + (a.pingOnly ? 'selected' : '') + '>Ping Only</option>' +
-            '</select>' +
-            '<button class="chip pfp-btn" data-id="' + a.id + '" style="padding: 6px;"><i class="fa-solid fa-camera text-xs"></i></button>' +
-            '<input type="file" id="pfpInput-' + a.id + '" data-pfp-input="' + a.id + '" accept="image/*" class="hidden">' +
-            '<button class="btn-icon ml-auto" data-del="' + a.id + '"><i class="fa-solid fa-trash text-xs"></i></button>' +
-          '</div>' +
-        '</div>' +
-      '</div>' +
-      '<textarea data-field="prompt" data-id="' + a.id + '" rows="2" class="input-field mb-2" placeholder="System Prompt" style="font-size: 13px; padding: 8px 12px;">' + safePrompt + '</textarea>' +
-      '<select data-field="model" data-id="' + a.id + '" class="input-field" data-model-select="' + a.id + '" style="font-size: 13px; padding: 8px 12px;"></select>' +
-    '</div>';
+    return '<div class="agent-card-settings"><div class="flex items-center gap-3 mb-3"><img src="' + pfpSrc + '" class="pfp-preview" id="pfp-' + a.id + '"><div class="flex-1"><div class="flex items-center gap-2 mb-2"><input type="text" value="' + safeName.replace(/"/g, '&quot;') + '" data-field="name" data-id="' + a.id + '" class="input-field" placeholder="Agent Name" style="font-size: 14px; padding: 8px 12px;"><label class="switch"><input type="checkbox" data-field="isActive" data-id="' + a.id + '" ' + (a.isActive ? 'checked' : '') + '><span class="slider"></span></label></div><div class="flex gap-2 items-center"><select data-field="role" data-id="' + a.id + '" class="input-field" style="width: auto; font-size: 12px; padding: 6px;"><option value="lead" ' + (a.role === 'lead' ? 'selected' : '') + '>Lead</option><option value="sub" ' + (a.role === 'sub' ? 'selected' : '') + '>Sub</option></select><select data-field="pingOnly" data-id="' + a.id + '" class="input-field" style="width: auto; font-size: 12px; padding: 6px;"><option value="false" ' + (!a.pingOnly ? 'selected' : '') + '>Auto</option><option value="true" ' + (a.pingOnly ? 'selected' : '') + '>Ping Only</option></select><button class="chip pfp-btn" data-id="' + a.id + '" style="padding: 6px;"><i class="fa-solid fa-camera text-xs"></i></button><input type="file" id="pfpInput-' + a.id + '" data-pfp-input="' + a.id + '" accept="image/*" class="hidden"><button class="btn-icon ml-auto" data-del="' + a.id + '"><i class="fa-solid fa-trash text-xs"></i></button></div></div></div><textarea data-field="prompt" data-id="' + a.id + '" rows="2" class="input-field mb-2" placeholder="System Prompt" style="font-size: 13px; padding: 8px 12px;">' + safePrompt + '</textarea><select data-field="model" data-id="' + a.id + '" class="input-field" data-model-select="' + a.id + '" style="font-size: 13px; padding: 8px 12px;"></select></div>';
   }).join('');
-
   var modelSel = document.getElementById('settingsModelSelect');
   if (modelSel && modelSel.options.length > 0) {
-    var modelSelects = document.querySelectorAll('[data-model-select]');
-    modelSelects.forEach(function(sel) {
+    document.querySelectorAll('[data-model-select]').forEach(function(sel) {
       sel.innerHTML = modelSel.innerHTML;
       var ag = state.agents.find(function(a) { return a.id === sel.dataset.modelSelect; });
       if (ag) sel.value = ag.model;
     });
   }
-
-  var fields = list.querySelectorAll('[data-field]');
-  fields.forEach(function(inp) {
+  list.querySelectorAll('[data-field]').forEach(function(inp) {
     inp.addEventListener('input', handleFieldChange);
     inp.addEventListener('change', handleFieldChange);
   });
-
-  var pfpBtns = list.querySelectorAll('.pfp-btn');
-  pfpBtns.forEach(function(b) {
-    b.addEventListener('click', function() {
-      var input = document.getElementById('pfpInput-' + b.dataset.id);
-      if (input) input.click();
-    });
+  list.querySelectorAll('.pfp-btn').forEach(function(b) {
+    b.addEventListener('click', function() { var input = document.getElementById('pfpInput-' + b.dataset.id); if (input) input.click(); });
   });
-
-  var pfpInputs = list.querySelectorAll('[data-pfp-input]');
-  pfpInputs.forEach(function(inp) {
+  list.querySelectorAll('[data-pfp-input]').forEach(function(inp) {
     inp.addEventListener('change', function(e) {
       var file = e.target.files[0]; if (!file) return;
       var reader = new FileReader();
@@ -828,22 +797,14 @@ function renderAgentsSettings() {
       reader.readAsDataURL(file);
     });
   });
-
-  var delBtns = list.querySelectorAll('[data-del]');
-  delBtns.forEach(function(b) {
-    b.addEventListener('click', function() {
-      state.agents = state.agents.filter(function(a) { return a.id !== b.dataset.del; });
-      renderAgentsSettings(); saveLocal();
-    });
+  list.querySelectorAll('[data-del]').forEach(function(b) {
+    b.addEventListener('click', function() { state.agents = state.agents.filter(function(a) { return a.id !== b.dataset.del; }); renderAgentsSettings(); saveLocal(); });
   });
 }
 
 function handleMentionTyping(e) {
-  var val = e.target.value;
-  var cursorPos = e.target.selectionStart;
-  var textBeforeCursor = val.substring(0, cursorPos);
-  var atMatch = textBeforeCursor.match(/@([a-zA-Z0-9_]*)$/);
-  
+  var val = e.target.value, cursorPos = e.target.selectionStart;
+  var atMatch = val.substring(0, cursorPos).match(/@([a-zA-Z0-9_]*)$/);
   var dropdown = document.getElementById('mentionDropdown');
   if (atMatch) {
     var query = atMatch[1].toLowerCase();
@@ -851,33 +812,22 @@ function handleMentionTyping(e) {
     if (activeAgents.length > 0) {
       dropdown.innerHTML = activeAgents.map(function(a) {
         var pfpSrc = a.pfp || ('https://placehold.co/20x20/18181b/71717a?text=' + encodeURIComponent(a.name ? a.name.charAt(0) : 'A'));
-        return '<div class="mention-item" data-name="' + a.name + '">' +
-          '<img src="' + pfpSrc + '" class="w-6 h-6 rounded-full">' +
-          '<span style="font-size: 14px;">' + a.name + '</span>' +
-        '</div>';
+        return '<div class="mention-item" data-name="' + a.name + '"><img src="' + pfpSrc + '" class="w-6 h-6 rounded-full"><span style="font-size: 14px;">' + a.name + '</span></div>';
       }).join('');
       dropdown.classList.remove('hidden');
-      var items = dropdown.querySelectorAll('.mention-item');
-      items.forEach(function(item) {
+      dropdown.querySelectorAll('.mention-item').forEach(function(item) {
         item.addEventListener('click', function() {
           var name = item.dataset.name;
-          var newText = val.substring(0, textBeforeCursor.length - atMatch[0].length) + '@' + name + ' ' + val.substring(cursorPos);
-          e.target.value = newText;
-          dropdown.classList.add('hidden');
-          e.target.focus();
+          e.target.value = val.substring(0, cursorPos - atMatch[0].length) + '@' + name + ' ' + val.substring(cursorPos);
+          dropdown.classList.add('hidden'); e.target.focus();
         });
       });
-    } else {
-      dropdown.classList.add('hidden');
-    }
-  } else {
-    dropdown.classList.add('hidden');
-  }
+    } else dropdown.classList.add('hidden');
+  } else dropdown.classList.add('hidden');
 }
 
 function handleImageUpload(e) {
-  var files = e.target.files;
-  var container = document.getElementById('imagePreviewContainer');
+  var files = e.target.files, container = document.getElementById('imagePreviewContainer');
   for (var i = 0; i < files.length; i++) {
     var reader = new FileReader();
     reader.onload = function(ev) {
@@ -888,8 +838,7 @@ function handleImageUpload(e) {
     };
     reader.readAsDataURL(files[i]);
   }
-  container.classList.remove('hidden');
-  e.target.value = '';
+  container.classList.remove('hidden'); e.target.value = '';
 }
 
 function startBuild(prompt) {
@@ -905,21 +854,16 @@ function startBuild(prompt) {
 }
 
 function sendMessage() {
-  var i = document.getElementById('chatInput');
-  var t = i.value.trim();
+  var i = document.getElementById('chatInput'), t = i.value.trim();
   if (!t || state.isGenerating) return;
-  
   var msgObj = { role: 'user', content: t };
   if (state.pendingImages.length > 0) {
-    msgObj.images = state.pendingImages;
-    state.pendingImages = [];
+    msgObj.images = state.pendingImages; state.pendingImages = [];
     document.getElementById('imagePreviewContainer').innerHTML = '';
     document.getElementById('imagePreviewContainer').classList.add('hidden');
   }
-
   state.messages.push(msgObj);
-  i.value = '';
-  document.getElementById('mentionDropdown').classList.add('hidden');
+  i.value = ''; document.getElementById('mentionDropdown').classList.add('hidden');
   addActivity('User', 'Sent message');
   renderChat(); saveLocal();
   runAgentLoop();
@@ -932,46 +876,60 @@ function runAgentLoop() {
   
   var activeAgents = state.agents.filter(function(a) { return a.isActive && (a.role === 'lead' || a.role === 'sub'); });
   if (activeAgents.length === 0) {
-    state.messages.push({ role: 'assistant', content: "No active agents! Please enable an agent in Settings." });
-    renderChat();
-    finishGeneration("");
-    return;
+    state.messages.push({ role: 'assistant', content: "No active agents!" });
+    renderChat(); finishGeneration(""); return;
   }
 
   var lastUserMsg = state.messages.filter(function(m) { return m.role === 'user'; }).pop();
   var targetAgent = null;
   
   if (lastUserMsg) {
-    var mentionedAgent = activeAgents.find(function(a) {
-      return lastUserMsg.content.toLowerCase().includes('@' + a.name.toLowerCase());
+    var mentionedAgent = activeAgents.find(function(a) { return lastUserMsg.content.toLowerCase().includes('@' + a.name.toLowerCase()); });
+    if (mentionedAgent) { targetAgent = mentionedAgent; addActivity(targetAgent.name, 'Replied to @mention'); }
+  }
+  if (!targetAgent) { targetAgent = activeAgents.find(function(a) { return a.role === 'lead'; }) || activeAgents[0]; addActivity(targetAgent.name, 'Is thinking...'); }
+
+  // A/B BATTLE MODE LOGIC
+  if (state.battleMode && targetAgent.role === 'lead') {
+    var battleMsg = { role: 'assistant', isBattle: true, agentId: targetAgent.id, isThinking: true, resA: '', resB: '' };
+    state.messages.push(battleMsg);
+    renderChat();
+    
+    // Force two different models
+    var p1 = callAI(targetAgent, state.messages, 'openai-fast');
+    var p2 = callAI(targetAgent, state.messages, 'openai-large');
+    
+    Promise.all([p1, p2]).then(function(results) {
+      battleMsg.isThinking = false;
+      battleMsg.resA = results[0] || "[No response]";
+      battleMsg.resB = results[1] || "[No response]";
+      renderChat();
+      state.isGenerating = false;
+      document.getElementById('sendBtn').classList.remove('hidden');
+      if (!document.getElementById('chatInput').matches(':focus')) document.getElementById('leftPanel').classList.remove('sweep-active');
+    }).catch(function(err) {
+      console.error("Battle Error:", err);
+      battleMsg.isThinking = false;
+      battleMsg.resA = "[Error]"; battleMsg.resB = "[Error]";
+      renderChat();
+      state.isGenerating = false;
+      document.getElementById('sendBtn').classList.remove('hidden');
     });
-    if (mentionedAgent) {
-      targetAgent = mentionedAgent;
-      addActivity(targetAgent.name, 'Replied to @mention');
-    }
+    return; // Halt standard loop until user picks a winner
   }
 
-  if (!targetAgent) {
-    targetAgent = activeAgents.find(function(a) { return a.role === 'lead'; }) || activeAgents[0];
-    addActivity(targetAgent.name, 'Is thinking...');
-  }
-
+  // STANDARD AGENT LOOP
   state.messages.push({ role: 'assistant', content: '', agentId: targetAgent.id, isThinking: true });
   renderChat();
   
   callAI(targetAgent, state.messages).then(function(response) {
     processResponse(targetAgent, response);
-  }).catch(handleError);
-  
-  function handleError(err) {
+  }).catch(function(err) {
     console.error("AI Error:", err);
     var lastMsg = state.messages[state.messages.length - 1];
-    if (lastMsg) {
-      lastMsg.content = "[Error generating response]";
-      lastMsg.isThinking = false;
-    }
+    if (lastMsg) { lastMsg.content = "[Error generating response]"; lastMsg.isThinking = false; }
     finishGeneration(lastMsg ? lastMsg.content : "");
-  }
+  });
 }
 
 function processResponse(agent, response) {
@@ -983,46 +941,32 @@ function processResponse(agent, response) {
 
   if (response.includes('[GET_CONSOLE]')) {
     var logs = document.getElementById('consoleLog').innerText;
-    state.messages.push({ role: 'user', content: 'CONSOLE LOGS:\n' + logs + '\n\nPlease analyze these logs and fix any errors in the code.', hidden: true });
+    state.messages.push({ role: 'user', content: 'CONSOLE LOGS:\n' + logs + '\n\nFix errors.', hidden: true });
     addActivity('System', 'Fed console logs to ' + agent.name);
-    runAgentLoop();
-    return;
+    runAgentLoop(); return;
   }
 
   var delegateRegex = /\[DELEGATE:\s*([^\]]+?)\s*:\s*([^\]]+?)\]/g;
-  var delegateMatches = [];
-  var m;
-  while ((m = delegateRegex.exec(response)) !== null) {
-    delegateMatches.push({ name: m[1].trim(), task: m[2].trim() });
-  }
+  var delegateMatches = [], m;
+  while ((m = delegateRegex.exec(response)) !== null) delegateMatches.push({ name: m[1].trim(), task: m[2].trim() });
 
   if (agent.role === 'lead' && delegateMatches.length > 0) {
     var promises = [];
     var activeAgents = state.agents.filter(function(a) { return a.isActive; });
     
     delegateMatches.forEach(function(match) {
-      var subName = match.name;
-      var task = match.task;
-      var subAgent = activeAgents.find(function(a) { 
-        return (a.name || '').toLowerCase() === subName.toLowerCase() && a.role === 'sub' && !a.pingOnly; 
-      });
-      
+      var subAgent = activeAgents.find(function(a) { return (a.name || '').toLowerCase() === match.name.toLowerCase() && a.role === 'sub' && !a.pingOnly; });
       if (subAgent) {
         addActivity('System', agent.name + ' delegated task to ' + subAgent.name);
-        state.messages.push({ role: 'user', content: 'Delegated task for ' + subAgent.name + ': ' + task, hidden: true });
-        
+        state.messages.push({ role: 'user', content: 'Delegated task for ' + subAgent.name + ': ' + match.task, hidden: true });
         var subMsg = { role: 'assistant', content: '', agentId: subAgent.id, isThinking: true };
         state.messages.push(subMsg);
         renderChat();
-        addActivity(subAgent.name, 'Working on: ' + task);
-        
-        var subHistory = state.messages.filter(function(m) { return !m.isThinking; }).concat([{role: 'user', content: task}]);
-        
+        addActivity(subAgent.name, 'Working on: ' + match.task);
+        var subHistory = state.messages.filter(function(m) { return !m.isThinking; }).concat([{role: 'user', content: match.task}]);
         promises.push(callAI(subAgent, subHistory).then(function(subResponse) {
-          subMsg.content = subResponse || "[No response]";
-          subMsg.isThinking = false;
-          renderChat();
-          addActivity(subAgent.name, 'Finished task');
+          subMsg.content = subResponse || "[No response]"; subMsg.isThinking = false;
+          renderChat(); addActivity(subAgent.name, 'Finished task');
           return { name: subAgent.name, response: subResponse };
         }));
       }
@@ -1031,34 +975,18 @@ function processResponse(agent, response) {
     if (promises.length > 0) {
       Promise.all(promises).then(function(results) {
         var report = "Sub-agents reported back in parallel:\n\n";
-        results.forEach(function(r) {
-          report += "--- " + r.name + " ---\n" + r.response + "\n\n";
-        });
-        report += "Please review their work for bugs or errors. If correct, output [done: task_number]. If bugs, output [DELEGATE: AgentName: Fix...]. If all tasks are complete, write the final integrated code in ```html blocks.";
-        
+        results.forEach(function(r) { report += "--- " + r.name + " ---\n" + r.response + "\n\n"; });
+        report += "Review their work. If correct, output [done: task]. If bugs, output [DELEGATE: AgentName: Fix...]. If all done, write final code.";
         state.messages.push({ role: 'user', content: report, hidden: true });
-        
         var leadAgent = activeAgents.find(function(a) { return a.role === 'lead'; }) || activeAgents[0];
         state.messages.push({ role: 'assistant', content: '', agentId: leadAgent.id, isThinking: true });
-        renderChat();
-        addActivity(leadAgent.name, 'Reviewing parallel results...');
-        
+        renderChat(); addActivity(leadAgent.name, 'Reviewing parallel results...');
         callAI(leadAgent, state.messages.filter(function(m) { return !m.isThinking; })).then(function(finalResponse) {
           processResponse(leadAgent, finalResponse);
-        }).catch(function(err) {
-          console.error("AI Error:", err);
-          finishGeneration("[Error generating response]");
-        });
-      }).catch(function(err) {
-        console.error("AI Error:", err);
-        finishGeneration("[Error generating response]");
-      });
-    } else {
-      finishGeneration(response);
-    }
-  } else {
-    finishGeneration(response);
-  }
+        }).catch(function(err) { console.error("AI Error:", err); finishGeneration("[Error generating response]"); });
+      }).catch(function(err) { console.error("AI Error:", err); finishGeneration("[Error generating response]"); });
+    } else finishGeneration(response);
+  } else finishGeneration(response);
 }
 
 function finishGeneration(response) {
@@ -1071,13 +999,11 @@ function finishGeneration(response) {
   }
   state.isGenerating = false;
   document.getElementById('sendBtn').classList.remove('hidden');
-  if (!document.getElementById('chatInput').matches(':focus')) {
-    document.getElementById('leftPanel').classList.remove('sweep-active');
-  }
+  if (!document.getElementById('chatInput').matches(':focus')) document.getElementById('leftPanel').classList.remove('sweep-active');
   saveLocal();
 }
 
-function callAI(agent, history) {
+function callAI(agent, history, forcedModel) {
   return new Promise(function(resolve) {
     var fullText = '';
     var apiMessages = history.filter(function(m) { return !m.hidden && !m.isThinking && m.content !== ''; }).map(function(m) {
@@ -1089,9 +1015,9 @@ function callAI(agent, history) {
       return { role: m.role, content: m.content };
     });
 
-    var modelToUse = agent.model || state.selectedModel;
+    var modelToUse = forcedModel || agent.model || state.selectedModel;
     var hasImages = apiMessages.some(function(m) { return Array.isArray(m.content) && m.content.some(function(c) { return c.type === 'image_url'; }); });
-    if (hasImages) modelToUse = 'openai-large';
+    if (hasImages && !forcedModel) modelToUse = 'openai-large';
 
     fetch('https://text.pollinations.ai/openai', {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
@@ -1110,14 +1036,11 @@ function callAI(agent, history) {
               if (Array.isArray(lastMsgFallback)) lastMsgFallback = lastMsgFallback[0].text;
               fetch('https://text.pollinations.ai/' + encodeURIComponent(lastMsgFallback) + '?model=' + modelToUse + '&system=' + encodeURIComponent(getSystemPrompt(agent.id)))
                 .then(function(r) { return r.text(); }).then(function(t) { resolve(t || "[No response]"); }).catch(function() { resolve("[No response]"); });
-            } else {
-              resolve(fullText);
-            }
+            } else resolve(fullText);
             return;
           }
           buffer += decoder.decode(result.value, {stream: true});
-          var lines = buffer.split('\n');
-          buffer = lines.pop();
+          var lines = buffer.split('\n'); buffer = lines.pop();
           lines.forEach(function(line) {
             if (line.startsWith('data: ') && line !== 'data: [DONE]') {
               try { 
@@ -1126,7 +1049,10 @@ function callAI(agent, history) {
                 if (delta) {
                   fullText += delta;
                   var lastMsg = state.messages[state.messages.length-1];
-                  if (lastMsg && lastMsg.agentId === agent.id && lastMsg.isThinking) {
+                  // Live update for battle mode
+                  if (lastMsg && lastMsg.isBattle && lastMsg.isThinking) {
+                    // Too complex to live update both simultaneously without race conditions, wait for done.
+                  } else if (lastMsg && lastMsg.agentId === agent.id && lastMsg.isThinking) {
                     lastMsg.content = fullText; renderChat();
                   }
                 }
@@ -1147,8 +1073,7 @@ function callAI(agent, history) {
 }
 
 function parseDynamicContent(text) {
-  var cleanText = text;
-  var components = [];
+  var cleanText = text, components = [];
 
   var match = cleanText.match(/\[DELEGATE:\s*([^\]]+?)\s*:\s*([^\]]+?)\]/);
   if (match) {
@@ -1198,60 +1123,34 @@ function parseDynamicContent(text) {
 
 function initStrands(container) {
   if (currentStrandRaf) cancelAnimationFrame(currentStrandRaf);
-  
   var canvas = container.querySelector('canvas');
   if (!canvas) return;
   var ctx = canvas.getContext('2d');
-  
-  canvas.width = container.clientWidth;
-  canvas.height = container.clientHeight;
-  
+  canvas.width = container.clientWidth; canvas.height = container.clientHeight;
   var colors = ['rgba(139, 92, 246, 0.9)', 'rgba(34, 211, 238, 0.9)', 'rgba(244, 63, 94, 0.9)'];
-  var strands = [];
-  var numStrands = 6;
-  
+  var strands = [], numStrands = 6;
   for (var i = 0; i < numStrands; i++) {
-    strands.push({
-      x: (canvas.width / (numStrands + 1)) * (i + 1),
-      phase: Math.random() * Math.PI * 2,
-      speed: 0.05 + Math.random() * 0.05,
-      amp: 6 + Math.random() * 6,
-      color: colors[i % colors.length]
-    });
+    strands.push({ x: (canvas.width / (numStrands + 1)) * (i + 1), phase: Math.random() * Math.PI * 2, speed: 0.05 + Math.random() * 0.05, amp: 6 + Math.random() * 6, color: colors[i % colors.length] });
   }
-  
   var t = 0;
   function draw() {
-    ctx.clearRect(0,0,canvas.width,canvas.height);
-    ctx.lineWidth = 1.5;
-    
+    ctx.clearRect(0,0,canvas.width,canvas.height); ctx.lineWidth = 1.5;
     strands.forEach(function(s) {
-      ctx.beginPath();
-      ctx.strokeStyle = s.color;
-      ctx.shadowBlur = 8;
-      ctx.shadowColor = s.color;
-      
+      ctx.beginPath(); ctx.strokeStyle = s.color; ctx.shadowBlur = 8; ctx.shadowColor = s.color;
       for (var y = 0; y <= canvas.height; y += 2) {
         var x = s.x + Math.sin(y * 0.15 + s.phase + t * s.speed) * s.amp;
-        if (y === 0) ctx.moveTo(x, y);
-        else ctx.lineTo(x, y);
+        if (y === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
       }
       ctx.stroke();
     });
-    
-    ctx.shadowBlur = 0;
-    t++;
+    ctx.shadowBlur = 0; t++;
     currentStrandRaf = requestAnimationFrame(draw);
   }
   draw();
 }
 
 function renderChat() {
-  if (currentStrandRaf) {
-    cancelAnimationFrame(currentStrandRaf);
-    currentStrandRaf = null;
-  }
-
+  if (currentStrandRaf) { cancelAnimationFrame(currentStrandRaf); currentStrandRaf = null; }
   var c = document.getElementById('chatScroll');
   c.innerHTML = state.messages.filter(function(m) { return !m.hidden; }).map(function(m, idx) {
     if (m.role === 'user') {
@@ -1259,12 +1158,7 @@ function renderChat() {
       if (m.images && m.images.length > 0) imgHtml = '<div class="flex gap-1 mb-2">' + m.images.map(function(img) { return '<img src="' + img + '" style="max-width:60px; border-radius:8px;">'; }).join('') + '</div>';
       var content = m.content.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
       content = content.replace(/@([a-zA-Z0-9_ ]+)/g, '<span class="tag-highlight">@$1</span>').replace(/\n/g, '<br>');
-      return '<div class="flex justify-end mb-6">' +
-        '<div class="max-w-[85%]">' +
-          '<div class="text-xs mb-1 text-right" style="color: var(--muted);">You</div>' +
-          '<div class="rounded-2xl rounded-br-sm px-4 py-3 text-sm" style="background: var(--chat-bubble-user); color: var(--text); border: 1px solid var(--border);">' + imgHtml + content + '</div>' +
-        '</div>' +
-      '</div>';
+      return '<div class="flex justify-end mb-6"><div class="max-w-[85%]"><div class="text-xs mb-1 text-right" style="color: var(--muted);">You</div><div class="rounded-2xl rounded-br-sm px-4 py-3 text-sm" style="background: var(--chat-bubble-user); color: var(--text); border: 1px solid var(--border);">' + imgHtml + content + '</div></div></div>';
     }
     
     var agent = state.agents.find(function(a) { return a.id === m.agentId; });
@@ -1273,81 +1167,95 @@ function renderChat() {
     var pfpHtml = (agent && agent.pfp) ? '<img src="' + agent.pfp + '" class="w-8 h-8 rounded-xl mr-3 mt-1">' : '<div class="w-8 h-8 rounded-xl flex-shrink-0 flex items-center justify-center text-xs mr-3 mt-1" style="background: ' + agentColor + '; color: #000; font-weight: bold;">' + agentName.charAt(0) + '</div>';
     
     var contentHtml = '';
-    if (m.isThinking && m.content === '') {
+    
+    if (m.isBattle) {
+      var battleLoading = '<div class="strands-container" style="width: 100%; height: 60px;"><canvas></canvas></div>';
+      var resA = m.resA ? formatBattleText(m.resA) : battleLoading;
+      var resB = m.resB ? formatBattleText(m.resB) : battleLoading;
+      contentHtml = '<div class="battle-container">' +
+        '<div class="battle-card"><div class="battle-header"><span>Model A (openai-fast)</span></div><div class="battle-content">' + resA + '</div>' + (m.resA ? '<button class="keep-btn" data-keep="A" data-idx="' + idx + '">Keep A</button>' : '') + '</div>' +
+        '<div class="battle-card"><div class="battle-header"><span>Model B (openai-large)</span></div><div class="battle-content">' + resB + '</div>' + (m.resB ? '<button class="keep-btn" data-keep="B" data-idx="' + idx + '">Keep B</button>' : '') + '</div>' +
+      '</div>';
+    } else if (m.isThinking && m.content === '') {
       contentHtml = '<div style="width: 180px; height: 50px;"><div class="strands-container"><canvas></canvas></div></div>';
     } else {
       var parsed = parseDynamicContent(m.content);
       var cleanText = parsed.text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      
+      // Parse ELI5 Tutor Notes
+      var tutorRegex = /&#91;TUTOR:\s*([^\]]+)&#93;/g;
+      cleanText = cleanText.replace(tutorRegex, '<div class="tutor-note"><i class="fa-solid fa-graduation-cap"></i><div>$1</div></div>');
+      
       cleanText = cleanText.replace(/```(\w+)?\n([\s\S]*?)```/g, '<div class="text-xs mt-2 mb-2 flex items-center gap-1" style="color: var(--muted);"><i class="fa-solid fa-check"></i> Code generated</div>');
       cleanText = cleanText.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
       contentHtml = cleanText + parsed.components;
     }
 
-    var replyBtn = !m.isThinking ? '<button class="btn-icon reply-btn" data-name="' + agentName + '" style="width:24px; height:24px; position:absolute; right:-30px; top:0; opacity:0.5;"><i class="fa-solid fa-reply text-xs"></i></button>' : '';
+    var replyBtn = !m.isThinking && !m.isBattle ? '<button class="btn-icon reply-btn" data-name="' + agentName + '" style="width:24px; height:24px; position:absolute; right:-30px; top:0; opacity:0.5;"><i class="fa-solid fa-reply text-xs"></i></button>' : '';
 
     return '<div class="flex mb-6 relative">' +
       pfpHtml +
       '<div class="flex-1 min-w-0 max-w-[85%]">' +
         '<div class="agent-tag" style="color: ' + agentColor + ';">' + agentName + ' ' + ((agent && agent.role === 'lead') ? '<i class="fa-solid fa-crown text-[10px] ml-1"></i>' : '') + '</div>' +
-        '<div class="text-sm leading-relaxed rounded-2xl rounded-tl-sm px-4 py-3 inline-block" style="background: var(--chat-bubble-ai); color: var(--text); border: 1px solid var(--border);">' + contentHtml + '</div>' +
+        '<div class="text-sm leading-relaxed rounded-2xl rounded-tl-sm px-4 py-3 inline-block w-full" style="background: var(--chat-bubble-ai); color: var(--text); border: 1px solid var(--border);">' + contentHtml + '</div>' +
         replyBtn +
       '</div>' +
     '</div>';
   }).join('');
   
   attachChatEvents();
-  
   var strandContainer = c.querySelector('.strands-container');
-  if (strandContainer) {
-    initStrands(strandContainer);
-  }
-  
+  if (strandContainer) initStrands(strandContainer);
   c.scrollTop = c.scrollHeight;
+}
+
+function formatBattleText(text) {
+  var parsed = parseDynamicContent(text);
+  var cleanText = parsed.text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  cleanText = cleanText.replace(/```(\w+)?\n([\s\S]*?)```/g, '<div class="text-xs mt-2 mb-2 flex items-center gap-1" style="color: var(--muted);"><i class="fa-solid fa-check"></i> Code generated</div>');
+  cleanText = cleanText.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
+  return cleanText + parsed.components;
 }
 
 function attachChatEvents() {
   var c = document.getElementById('chatScroll');
-  var singles = c.querySelectorAll('.opt-single');
-  singles.forEach(function(b) {
-    b.addEventListener('click', function() {
-      document.getElementById('chatInput').value = b.dataset.val; sendMessage();
-    });
+  c.querySelectorAll('.opt-single').forEach(function(b) {
+    b.addEventListener('click', function() { document.getElementById('chatInput').value = b.dataset.val; sendMessage(); });
   });
-  var multis = c.querySelectorAll('.opt-multi');
-  multis.forEach(function(b) {
-    b.addEventListener('click', function() {
-      b.classList.toggle('active');
-      var parent = b.parentElement;
-      parent.querySelector('.opt-submit').classList.toggle('hidden', parent.querySelectorAll('.opt-multi.active').length === 0);
-    });
+  c.querySelectorAll('.opt-multi').forEach(function(b) {
+    b.addEventListener('click', function() { b.classList.toggle('active'); var parent = b.parentElement; parent.querySelector('.opt-submit').classList.toggle('hidden', parent.querySelectorAll('.opt-multi.active').length === 0); });
   });
-  var submits = c.querySelectorAll('.opt-submit');
-  submits.forEach(function(b) {
-    b.addEventListener('click', function() {
-      var selected = Array.from(b.parentElement.querySelectorAll('.opt-multi.active')).map(function(x) { return x.dataset.val; }).join(', ');
-      document.getElementById('chatInput').value = selected; sendMessage();
-    });
+  c.querySelectorAll('.opt-submit').forEach(function(b) {
+    b.addEventListener('click', function() { var selected = Array.from(b.parentElement.querySelectorAll('.opt-multi.active')).map(function(x) { return x.dataset.val; }).join(', '); document.getElementById('chatInput').value = selected; sendMessage(); });
   });
-  var sends = c.querySelectorAll('.opt-input-send');
-  sends.forEach(function(b) {
-    b.addEventListener('click', function() {
-      var input = b.previousElementSibling;
-      if (input.value.trim()) { document.getElementById('chatInput').value = input.value; sendMessage(); }
-    });
+  c.querySelectorAll('.opt-input-send').forEach(function(b) {
+    b.addEventListener('click', function() { var input = b.previousElementSibling; if (input.value.trim()) { document.getElementById('chatInput').value = input.value; sendMessage(); } });
   });
-  var replies = c.querySelectorAll('.reply-btn');
-  replies.forEach(function(b) {
+  c.querySelectorAll('.reply-btn').forEach(function(b) {
+    b.addEventListener('click', function() { document.getElementById('chatInput').value = '@' + b.dataset.name + ' '; document.getElementById('chatInput').focus(); });
+  });
+  
+  // Battle Keep Buttons
+  c.querySelectorAll('.keep-btn').forEach(function(b) {
     b.addEventListener('click', function() {
-      document.getElementById('chatInput').value = '@' + b.dataset.name + ' ';
-      document.getElementById('chatInput').focus();
+      var idx = parseInt(b.dataset.idx);
+      var keep = b.dataset.keep;
+      var battleMsg = state.messages[idx];
+      if (!battleMsg) return;
+      
+      var chosenResponse = keep === 'A' ? battleMsg.resA : battleMsg.resB;
+      // Remove battle message and replace with normal assistant message
+      state.messages.splice(idx, 1, { role: 'assistant', content: chosenResponse, agentId: battleMsg.agentId, isThinking: false });
+      renderChat();
+      // Continue the agent loop with the chosen response
+      var agent = state.agents.find(function(a) { return a.id === battleMsg.agentId; });
+      if (agent) processResponse(agent, chosenResponse);
     });
   });
 }
 
 function extractFiles(text) {
-  var files = {}; 
-  var r = /```(\w+)?\n([\s\S]*?)```/g; 
-  var m;
+  var files = {}; var r = /```(\w+)?\n([\s\S]*?)```/g; var m;
   while ((m = r.exec(text)) !== null) {
     var lang = m[1] || 'txt', code = m[2], fn = 'file.' + lang;
     if (lang === 'html') fn = 'index.html'; else if (lang === 'css') fn = 'style.css'; else if (lang === 'js') fn = 'script.js';
@@ -1367,8 +1275,7 @@ function updatePreview() {
 
 function setTab(tab) {
   state.activeTab = tab;
-  var tabs = ['preview', 'code', 'status', 'console', 'terminal', 'assets', 'history'];
-  tabs.forEach(function(t) {
+  ['preview', 'code', 'status', 'console', 'terminal', 'assets', 'history'].forEach(function(t) {
     var pane = document.getElementById('pane' + t.charAt(0).toUpperCase() + t.slice(1));
     var btn = document.getElementById('tab' + t.charAt(0).toUpperCase() + t.slice(1));
     if (pane) pane.classList.toggle('hidden', t !== tab);
@@ -1381,13 +1288,9 @@ function setTab(tab) {
 function renderFileTree() {
   var tree = document.getElementById('fileTree');
   tree.innerHTML = Object.keys(state.files).map(function(f) {
-    return '<div class="file-tree-item ' + (f === state.activeFile ? 'active' : '') + '" data-file="' + f + '" style="padding: 6px 8px; font-size: 12px; cursor: pointer; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; ' + (f === state.activeFile ? 'background: rgba(139,92,246,0.1); color: var(--text);' : 'color: var(--muted);') + '">' +
-      '<span><i class="fa-solid fa-code text-[10px]"></i> ' + f + '</span>' +
-      '<i class="fa-solid fa-thumbtack pin-btn" data-file="' + f + '" style="opacity: ' + (state.pinnedFiles.includes(f) ? '1' : '0.2') + '; color: ' + (state.pinnedFiles.includes(f) ? 'var(--accent)' : 'var(--muted)') + '; font-size: 10px; cursor: pointer;"></i>' +
-    '</div>';
+    return '<div class="file-tree-item ' + (f === state.activeFile ? 'active' : '') + '" data-file="' + f + '" style="padding: 6px 8px; font-size: 12px; cursor: pointer; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; ' + (f === state.activeFile ? 'background: rgba(139,92,246,0.1); color: var(--text);' : 'color: var(--muted);') + '"><span><i class="fa-solid fa-code text-[10px]"></i> ' + f + '</span><i class="fa-solid fa-thumbtack pin-btn" data-file="' + f + '" style="opacity: ' + (state.pinnedFiles.includes(f) ? '1' : '0.2') + '; color: ' + (state.pinnedFiles.includes(f) ? 'var(--accent)' : 'var(--muted)') + '; font-size: 10px; cursor: pointer;"></i></div>';
   }).join('');
-  var items = tree.querySelectorAll('.file-tree-item');
-  items.forEach(function(it) {
+  tree.querySelectorAll('.file-tree-item').forEach(function(it) {
     it.addEventListener('click', function(e) {
       if (e.target.classList.contains('pin-btn')) return;
       state.activeFile = it.dataset.file;
@@ -1396,11 +1299,9 @@ function renderFileTree() {
       renderFileTree();
     });
   });
-  var pins = tree.querySelectorAll('.pin-btn');
-  pins.forEach(function(b) {
+  tree.querySelectorAll('.pin-btn').forEach(function(b) {
     b.addEventListener('click', function(e) {
-      e.stopPropagation();
-      var f = b.dataset.file;
+      e.stopPropagation(); var f = b.dataset.file;
       if (state.pinnedFiles.includes(f)) state.pinnedFiles = state.pinnedFiles.filter(function(x) { return x !== f; });
       else state.pinnedFiles.push(f);
       renderFileTree();
@@ -1415,68 +1316,41 @@ function renderFileTree() {
 function renderHistory() {
   var list = document.getElementById('historyList');
   list.innerHTML = state.versions.map(function(v, i) {
-    return '<div class="p-3 rounded-xl mb-2 cursor-pointer border border-transparent" data-idx="' + i + '" style="background: rgba(255,255,255,0.03);">' +
-      '<div class="text-sm">Version ' + (i + 1) + '</div>' +
-      '<div class="text-xs" style="color: var(--muted);">' + new Date(v.time).toLocaleTimeString() + '</div>' +
-    '</div>';
+    return '<div class="p-3 rounded-xl mb-2 cursor-pointer border border-transparent" data-idx="' + i + '" style="background: rgba(255,255,255,0.03);"><div class="text-sm">Version ' + (i + 1) + '</div><div class="text-xs" style="color: var(--muted);">' + new Date(v.time).toLocaleTimeString() + '</div></div>';
   }).join('');
-  var items = list.querySelectorAll('[data-idx]');
-  items.forEach(function(d) {
-    d.addEventListener('click', function() {
-      state.files = JSON.parse(JSON.stringify(state.versions[parseInt(d.dataset.idx)].files));
-      renderFileTree(); updatePreview();
-    });
+  list.querySelectorAll('[data-idx]').forEach(function(d) {
+    d.addEventListener('click', function() { state.files = JSON.parse(JSON.stringify(state.versions[parseInt(d.dataset.idx)].files)); renderFileTree(); updatePreview(); });
   });
 }
 
 function saveLocal() {
-  try {
-    localStorage.setItem('sakura_dev_v21', JSON.stringify({
-      mode: state.mode, files: state.files, agents: state.agents, selectedModel: state.selectedModel, versions: state.versions
-    }));
-  } catch(e){}
+  try { localStorage.setItem('sakura_dev_v23', JSON.stringify({ mode: state.mode, files: state.files, agents: state.agents, selectedModel: state.selectedModel, versions: state.versions })); } catch(e){}
 }
 
 function loadLocal() {
   try {
-    var s = localStorage.getItem('sakura_dev_v21');
+    var s = localStorage.getItem('sakura_dev_v23');
     if (s) {
       var p = JSON.parse(s);
-      state.mode = p.mode || 'coding';
-      state.agents = p.agents || [];
-      state.selectedModel = p.selectedModel || 'openai-fast';
-      state.files = p.files || {};
-      state.versions = p.versions || [];
-      
-      if (state.agents.length === 0) {
-        state.agents.push({ id: 'def-1', name: 'Sakura AI', pfp: '', model: state.selectedModel, prompt: 'You are an elite AI web developer.', role: 'lead', isActive: true, pingOnly: false });
-      }
-      if (!state.agents.some(function(a) { return a.isActive && (a.role === 'lead' || a.role === 'sub'); })) {
-        state.agents[0].isActive = true;
-        state.agents[0].role = 'lead';
-      }
-      
-      var modeBtns = document.querySelectorAll('[data-mode]');
-      modeBtns.forEach(function(x) { x.classList.toggle('active', x.dataset.mode === state.mode); });
-      
+      state.mode = p.mode || 'coding'; state.agents = p.agents || []; state.selectedModel = p.selectedModel || 'openai-fast';
+      state.files = p.files || {}; state.versions = p.versions || [];
+      if (state.agents.length === 0) state.agents.push({ id: 'def-1', name: 'Sakura AI', pfp: '', model: state.selectedModel, prompt: 'You are an elite AI web developer.', role: 'lead', isActive: true, pingOnly: false });
+      if (!state.agents.some(function(a) { return a.isActive && (a.role === 'lead' || a.role === 'sub'); })) { state.agents[0].isActive = true; state.agents[0].role = 'lead'; }
+      document.querySelectorAll('[data-mode]').forEach(function(x) { x.classList.toggle('active', x.dataset.mode === state.mode); });
       if (Object.keys(state.files).length > 0) {
         state.activeFile = 'index.html';
         state.messages.push({role: 'user', content: 'Loaded from previous session.'});
-        state.messages.push({role: 'assistant', content: 'Welcome back! I have loaded your files.', isThinking: false});
+        state.messages.push({role: 'assistant', content: 'Welcome back!', isThinking: false});
         document.getElementById('heroView').classList.add('hidden');
         document.getElementById('builderView').classList.remove('hidden');
-        setMobileView('chat');
-        renderFileTree(); updatePreview(); renderChat();
+        setMobileView('chat'); renderFileTree(); updatePreview(); renderChat();
       }
     }
   } catch(e){ console.error("Load error:", e); }
 }
 
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', init);
-} else {
-  init();
-}
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+else init();
 </script>
 </body>
 </html>
