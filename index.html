@@ -2,64 +2,273 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sakura Dev — Parallel AI Teams</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Sakura Dev — Border Glow AI</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #09090b; --surface: #111118; --surface-2: #18181b; --border: #1f1f2e;
-    --text: #e4e4e7; --muted: #71717a;
+    --bg: #05050a; 
+    --surface: rgba(20, 20, 30, 0.5); 
+    --surface-2: rgba(30, 30, 45, 0.5); 
+    --border: rgba(255, 255, 255, 0.1);
+    --text: #f5f5f7; --muted: #8b8b96;
     --accent: #8b5cf6; --accent-2: #22d3ee; --accent-3: #f43f5e;
-    --hero-overlay: linear-gradient(180deg, rgba(9,9,11,0.6) 0%, rgba(9,9,11,0.95) 80%, var(--bg) 100%);
+    --hero-overlay: linear-gradient(180deg, rgba(5,5,10,0.4) 0%, rgba(5,5,10,0.9) 80%, var(--bg) 100%);
+    --card-bg: #111118;
   }
   :root[data-theme="light"] {
-    --bg: #f8fafc; --surface: #ffffff; --surface-2: #f1f5f9; --border: #e2e8f0;
-    --text: #0f172a; --muted: #64748b;
-    --hero-overlay: linear-gradient(180deg, rgba(255,255,255,0.6) 0%, rgba(255,255,255,0.95) 80%, var(--bg) 100%);
+    --bg: #eef2f6; 
+    --surface: rgba(255, 255, 255, 0.6); 
+    --surface-2: rgba(255, 255, 255, 0.4); 
+    --border: rgba(0, 0, 0, 0.08);
+    --text: #1d1d1f; --muted: #6e6e73;
+    --hero-overlay: linear-gradient(180deg, rgba(238,242,246,0.4) 0%, rgba(238,242,246,0.9) 80%, var(--bg) 100%);
+    --card-bg: #ffffff;
   }
+  
   * { font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; box-sizing: border-box; }
   .font-mono { font-family: 'JetBrains Mono', monospace; }
   html, body { height: 100%; margin: 0; background: var(--bg); color: var(--text); overflow: hidden; transition: background 0.3s, color 0.3s; }
-  ::-webkit-scrollbar { width: 6px; height: 6px; } 
+  
+  /* Apple Ambient Glowing Orbs */
+  .bg-orb { position: fixed; z-index: -1; pointer-events: none; border-radius: 50%; filter: blur(100px); opacity: 0.4; }
+  .orb-1 { top: -10%; left: -5%; width: 50%; height: 50%; background: var(--accent); animation: float1 20s ease-in-out infinite; }
+  .orb-2 { bottom: -10%; right: -5%; width: 50%; height: 50%; background: var(--accent-2); animation: float2 25s ease-in-out infinite; }
+  .orb-3 { top: 40%; left: 40%; width: 30%; height: 30%; background: var(--accent-3); animation: float3 30s ease-in-out infinite; }
+  @keyframes float1 { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(50px, 30px); } }
+  @keyframes float2 { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(-40px, -50px); } }
+  @keyframes float3 { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(-30px, 40px); } }
+
+  ::-webkit-scrollbar { width: 4px; height: 4px; } 
   ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; } 
+  ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 2px; } 
   ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+  
   .hidden { display: none !important; }
   h1, h2, h3 { letter-spacing: -0.04em; }
-  .app-container { display: flex; flex-direction: column; height: 100vh; }
+  .app-container { display: flex; flex-direction: column; height: 100vh; padding: 12px; gap: 12px; }
 
-  .hero-bg { position: absolute; inset: 0; z-index: 0; background-image: url('https://media.istockphoto.com/id/1390815938/photo/tokyo-city-in-japan.jpg?s=612x612&w=0&k=20&c=VHiC3TlbXkb-Yf6WUYjh825Y0nGMCTkNUa9j8X8rVfY='); background-size: cover; background-position: center; filter: grayscale(50%); }
+  .hero-bg { position: absolute; inset: 0; z-index: 0; background-image: url('https://media.istockphoto.com/id/1390815938/photo/tokyo-city-in-japan.jpg?s=612x612&w=0&k=20&c=VHiC3TlbXkb-Yf6WUYjh825Y0nGMCTkNUa9j8X8rVfY='); background-size: cover; background-position: center; filter: grayscale(20%) contrast(120%); }
   .hero-overlay { position: absolute; inset: 0; z-index: 1; background: var(--hero-overlay); }
 
-  .gradient-wrap { padding: 1px; border-radius: 1rem; background: linear-gradient(135deg, var(--accent), var(--accent-2), var(--accent-3)); background-size: 200% 200%; animation: gradientShift 6s ease infinite; }
-  @keyframes gradientShift { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
-  .floating-input { background: var(--surface); border-radius: calc(1rem - 1px); border: none; }
-  .floating-input textarea { background: transparent; border: none; outline: none; resize: none; width: 100%; color: var(--text); font-size: 15px; font-weight: 300; padding: 16px 20px; }
+  /* Base Glass for UI Elements */
+  .louis-glass {
+    position: relative;
+    background-color: var(--surface);
+    background-image: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.04) 40%, transparent 60%, rgba(255, 255, 255, 0.08) 100%);
+    backdrop-filter: blur(30px) saturate(180%);
+    -webkit-backdrop-filter: blur(30px) saturate(180%);
+    border: 1px solid var(--border);
+    box-shadow: inset 1px 1px 1px rgba(255, 255, 255, 0.15), inset -1px -1px 1px rgba(0, 0, 0, 0.1), 0 8px 32px rgba(0, 0, 0, 0.2);
+  }
 
-  .btn-icon { width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; color: var(--muted); transition: all 0.2s; cursor: pointer; border-radius: 6px; background: transparent; border: none; }
-  .btn-icon:hover { color: var(--text); background: var(--surface-2); }
-  .btn-send { background: var(--text); color: var(--bg); border: none; cursor: pointer; width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; transition: transform 0.2s; }
-  .btn-send:hover { transform: scale(1.05); }
+  /* ===== USER PROVIDED BORDER GLOW CARD ===== */
+  @property --cursor-angle {
+    syntax: '<angle>';
+    initial-value: 0deg;
+    inherits: false;
+  }
 
-  .chip { background: var(--surface-2); border: 1px solid var(--border); color: var(--muted); padding: 6px 12px; border-radius: 8px; font-size: 12px; cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; gap: 4px; }
-  .chip:hover { border-color: var(--accent); color: var(--text); }
-  .chip.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+  @keyframes sweep {
+    to { --cursor-angle: 360deg; }
+  }
 
-  .modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(12px); z-index: 100; display: flex; align-items: center; justify-content: center; padding: 16px; }
-  .modal-card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; width: 100%; max-width: 600px; max-height: 85vh; overflow-y: auto; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
-  .input-field { width: 100%; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; color: var(--text); font-size: 14px; outline: none; transition: border 0.2s; }
-  .input-field:focus { border-color: var(--accent); }
-  .agent-card-settings { background: var(--surface-2); border: 1px solid var(--border); border-radius: 12px; padding: 16px; margin-bottom: 12px; }
-  .pfp-preview { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; background: var(--bg); border: 1px solid var(--border); }
+  .border-glow-card {
+    --edge-proximity: 100;
+    --cursor-angle: 45deg;
+    --edge-sensitivity: 0;
+    --color-sensitivity: 0;
+    --border-radius: 16px;
+    --glow-padding: 10px;
+    --cone-spread: 25;
+    --card-bg: var(--card-bg);
+    --glow-color: hsl(268 84% 60% / 100%);
+    --glow-color-60: hsl(268 84% 60% / 60%);
+    --glow-color-50: hsl(192 84% 50% / 50%);
+    --glow-color-40: hsl(192 84% 50% / 40%);
+    --glow-color-30: hsl(349 84% 60% / 30%);
+    --glow-color-20: hsl(349 84% 60% / 20%);
+    --glow-color-10: hsl(268 84% 60% / 10%);
 
-  .agent-tag { font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 4px; display: inline-block; margin-bottom: 4px; }
-  .typing-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); display: inline-block; animation: typing 1.4s infinite ease-in-out; margin-right: 4px; }
-  @keyframes typing { 0%, 60%, 100% { transform: translateY(0); opacity: 0.3; } 30% { transform: translateY(-4px); opacity: 1; } }
-  .mention-dropdown { position: absolute; bottom: 100%; left: 40px; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; margin-bottom: 8px; width: 200px; box-shadow: 0 10px 20px rgba(0,0,0,0.5); z-index: 50; }
-  .mention-item { padding: 8px 12px; display: flex; align-items: center; gap: 8px; cursor: pointer; }
-  .mention-item:hover { background: var(--surface-2); }
+    position: relative;
+    border-radius: var(--border-radius);
+    isolation: isolate;
+    transform: translate3d(0, 0, 0.01px);
+    display: flex;
+    flex-direction: column;
+    border: 1px solid rgb(255 255 255 / 15%);
+    background: var(--card-bg, #120F17);
+    overflow: visible;
+    box-shadow:
+      rgba(0, 0, 0, 0.1) 0px 1px 2px,
+      rgba(0, 0, 0, 0.1) 0px 2px 4px,
+      rgba(0, 0, 0, 0.1) 0px 4px 8px,
+      rgba(0, 0, 0, 0.1) 0px 8px 16px,
+      rgba(0, 0, 0, 0.1) 0px 16px 32px,
+      rgba(0, 0, 0, 0.1) 0px 32px 64px;
+  }
+
+  .border-glow-card::before,
+  .border-glow-card::after,
+  .border-glow-card > .edge-light {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    transition: opacity 0.25s ease-out;
+    z-index: -1;
+  }
+
+  .border-glow-card:not(:hover):not(.sweep-active)::before,
+  .border-glow-card:not(:hover):not(.sweep-active)::after,
+  .border-glow-card:not(:hover):not(.sweep-active) > .edge-light {
+    opacity: 0;
+    transition: opacity 0.75s ease-in-out;
+  }
+
+  .border-glow-card::before {
+    border: 1px solid transparent;
+    background:
+      linear-gradient(var(--card-bg, #120F17) 0 100%) padding-box,
+      linear-gradient(rgb(255 255 255 / 0%) 0% 100%) border-box,
+      var(--gradient-one, radial-gradient(at 80% 55%, hsla(268, 100%, 76%, 1) 0px, transparent 50%)) border-box,
+      var(--gradient-two, radial-gradient(at 69% 34%, hsla(349, 100%, 74%, 1) 0px, transparent 50%)) border-box,
+      var(--gradient-three, radial-gradient(at 8% 6%, hsla(136, 100%, 78%, 1) 0px, transparent 50%)) border-box,
+      var(--gradient-four, radial-gradient(at 41% 38%, hsla(192, 100%, 64%, 1) 0px, transparent 50%)) border-box,
+      var(--gradient-five, radial-gradient(at 86% 85%, hsla(186, 100%, 74%, 1) 0px, transparent 50%)) border-box,
+      var(--gradient-six, radial-gradient(at 82% 18%, hsla(52, 100%, 65%, 1) 0px, transparent 50%)) border-box,
+      var(--gradient-seven, radial-gradient(at 51% 4%, hsla(12, 100%, 72%, 1) 0px, transparent 50%)) border-box,
+      var(--gradient-base, linear-gradient(#c299ff 0 100%)) border-box;
+
+    opacity: calc((var(--edge-proximity) - var(--color-sensitivity)) / (100 - var(--color-sensitivity)));
+
+    mask-image:
+      conic-gradient(
+        from var(--cursor-angle) at center,
+        black calc(var(--cone-spread) * 1%),
+        transparent calc((var(--cone-spread) + 15) * 1%),
+        transparent calc((100 - var(--cone-spread) - 15) * 1%),
+        black calc((100 - var(--cone-spread)) * 1%)
+      );
+  }
+
+  .border-glow-card::after {
+    border: 1px solid transparent;
+    background:
+      var(--gradient-one, radial-gradient(at 80% 55%, hsla(268, 100%, 76%, 1) 0px, transparent 50%)) padding-box,
+      var(--gradient-two, radial-gradient(at 69% 34%, hsla(349, 100%, 74%, 1) 0px, transparent 50%)) padding-box,
+      var(--gradient-three, radial-gradient(at 8% 6%, hsla(136, 100%, 78%, 1) 0px, transparent 50%)) padding-box,
+      var(--gradient-four, radial-gradient(at 41% 38%, hsla(192, 100%, 64%, 1) 0px, transparent 50%)) padding-box,
+      var(--gradient-five, radial-gradient(at 86% 85%, hsla(186, 100%, 74%, 1) 0px, transparent 50%)) padding-box,
+      var(--gradient-six, radial-gradient(at 82% 18%, hsla(52, 100%, 65%, 1) 0px, transparent 50%)) padding-box,
+      var(--gradient-seven, radial-gradient(at 51% 4%, hsla(12, 100%, 72%, 1) 0px, transparent 50%)) padding-box,
+      var(--gradient-base, linear-gradient(#c299ff 0 100%)) padding-box;
+
+    mask-image:
+      linear-gradient(to bottom, black, black),
+      radial-gradient(ellipse at 50% 50%, black 40%, transparent 65%),
+      radial-gradient(ellipse at 66% 66%, black 5%, transparent 40%),
+      radial-gradient(ellipse at 33% 33%, black 5%, transparent 40%),
+      radial-gradient(ellipse at 66% 33%, black 5%, transparent 40%),
+      radial-gradient(ellipse at 33% 66%, black 5%, transparent 40%),
+      conic-gradient(from var(--cursor-angle) at center, transparent 5%, black 15%, black 85%, transparent 95%);
+
+    mask-composite: subtract, add, add, add, add, add;
+    opacity: calc(var(--fill-opacity, 0.5) * (var(--edge-proximity) - var(--color-sensitivity)) / (100 - var(--color-sensitivity)));
+    mix-blend-mode: soft-light;
+  }
+
+  .border-glow-card > .edge-light {
+    inset: calc(var(--glow-padding) * -1);
+    pointer-events: none;
+    z-index: 1;
+
+    mask-image:
+      conic-gradient(
+        from var(--cursor-angle) at center, black 2.5%, transparent 10%, transparent 90%, black 97.5%
+      );
+
+    opacity: calc((var(--edge-proximity) - var(--edge-sensitivity)) / (100 - var(--edge-sensitivity)));
+    mix-blend-mode: plus-lighter;
+  }
+
+  .border-glow-card > .edge-light::before {
+    content: "";
+    position: absolute;
+    inset: var(--glow-padding);
+    border-radius: inherit;
+    box-shadow:
+      inset 0 0 0 1px var(--glow-color, hsl(40deg 80% 80% / 100%)),
+      inset 0 0 1px 0 var(--glow-color-60, hsl(40deg 80% 80% / 60%)),
+      inset 0 0 3px 0 var(--glow-color-50, hsl(40deg 80% 80% / 50%)),
+      inset 0 0 6px 0 var(--glow-color-40, hsl(40deg 80% 80% / 40%)),
+      inset 0 0 15px 0 var(--glow-color-30, hsl(40deg 80% 80% / 30%)),
+      inset 0 0 25px 2px var(--glow-color-20, hsl(40deg 80% 80% / 20%)),
+      inset 0 0 50px 2px var(--glow-color-10, hsl(40deg 80% 80% / 10%)),
+      0 0 1px 0 var(--glow-color-60, hsl(40deg 80% 80% / 60%)),
+      0 0 3px 0 var(--glow-color-50, hsl(40deg 80% 80% / 50%)),
+      0 0 6px 0 var(--glow-color-40, hsl(40deg 80% 80% / 40%)),
+      0 0 15px 0 var(--glow-color-30, hsl(40deg 80% 80% / 30%)),
+      0 0 25px 2px var(--glow-color-20, hsl(40deg 80% 80% / 20%)),
+      0 0 50px 2px var(--glow-color-10, hsl(40deg 80% 80% / 10%));
+  }
+
+  .border-glow-inner {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+    border-radius: inherit;
+    height: 100%;
+  }
+
+  /* Trigger sweep animation when active */
+  .border-glow-card.sweep-active::before,
+  .border-glow-card.sweep-active::after,
+  .border-glow-card.sweep-active > .edge-light {
+    animation: sweep 4s linear infinite;
+  }
+  /* ========================================== */
+
+  .floating-input textarea { background: transparent; border: none; outline: none; resize: none; width: 100%; color: var(--text); font-size: 15px; font-weight: 400; padding: 14px 18px; }
+
+  .btn-icon { width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; color: var(--muted); transition: all 0.2s; cursor: pointer; border-radius: 10px; background: transparent; border: none; }
+  .btn-icon:hover { color: var(--text); background: rgba(255,255,255,0.08); }
+  .btn-send { background: var(--text); color: var(--bg); border: none; cursor: pointer; width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; transition: all 0.2s; box-shadow: 0 2px 10px rgba(255,255,255,0.1); }
+  .btn-send:hover { transform: scale(1.05); box-shadow: 0 4px 15px rgba(255,255,255,0.2); }
+
+  .chip { background: var(--surface-2); border: 1px solid var(--border); color: var(--muted); padding: 6px 12px; border-radius: 8px; font-size: 12px; cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; backdrop-filter: blur(10px); }
+  .chip:hover { border-color: var(--accent); color: var(--text); background: rgba(255,255,255,0.05); }
+  .chip.active { background: var(--accent); color: #fff; border-color: var(--accent); box-shadow: 0 0 15px rgba(139, 92, 246, 0.4); }
+
+  .modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(20px); z-index: 100; display: flex; align-items: center; justify-content: center; padding: 16px; }
+  .modal-card { border-radius: 20px; width: 100%; max-width: 600px; max-height: 85vh; overflow-y: auto; padding: 24px; }
+  .input-field { width: 100%; background: rgba(0,0,0,0.2); border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; color: var(--text); font-size: 14px; outline: none; transition: all 0.2s; }
+  .input-field:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1); }
+  .agent-card-settings { border: 1px solid var(--border); border-radius: 16px; padding: 16px; margin-bottom: 12px; background: rgba(255,255,255,0.03); }
+  .pfp-preview { width: 40px; height: 40px; border-radius: 12px; object-fit: cover; background: var(--bg); border: 1px solid var(--border); }
+
+  .agent-tag { font-size: 11px; font-weight: 600; padding: 3px 8px; border-radius: 6px; display: inline-block; margin-bottom: 4px; background: rgba(255,255,255,0.05); }
+  
+  /* USER PROVIDED STRANDS CSS */
+  .strands-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background: transparent;
+  }
+  .strands-container canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+  
+  .mention-dropdown { position: absolute; bottom: 100%; left: 20px; right: 20px; background: var(--surface); backdrop-filter: blur(20px); border: 1px solid var(--border); border-radius: 12px; margin-bottom: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); z-index: 50; }
+  .mention-item { padding: 12px 14px; display: flex; align-items: center; gap: 10px; cursor: pointer; }
+  .mention-item:hover { background: rgba(255,255,255,0.05); }
   .tag-highlight { color: var(--accent-2); font-weight: 600; }
 
   .switch { position: relative; display: inline-block; width: 36px; height: 20px; }
@@ -77,35 +286,47 @@
   .hide-scrollbar::-webkit-scrollbar { display: none; } .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
   .fade-in { animation: fadeIn 0.5s ease-out; } @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
   
-  .status-item { padding: 8px 12px; border-bottom: 1px solid var(--border); font-size: 12px; display: flex; align-items: center; gap: 8px; }
-  .status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--muted); }
-  .status-dot.active { background: var(--accent-2); box-shadow: 0 0 5px var(--accent-2); }
+  .status-item { padding: 8px 10px; border-bottom: 1px solid var(--border); font-size: 12px; display: flex; align-items: center; gap: 8px; }
+  .status-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--muted); }
+  .status-dot.active { background: var(--accent-2); box-shadow: 0 0 6px var(--accent-2); }
+
+  /* Floating Mobile Nav Island */
+  .mobile-nav { position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%); width: calc(100% - 32px); max-width: 400px; height: 56px; border: 1px solid var(--border); display: flex; justify-content: space-around; align-items: center; z-index: 40; background: var(--surface); backdrop-filter: blur(30px); border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+  .mobile-nav button { color: var(--muted); font-size: 10px; display: flex; flex-direction: column; align-items: center; gap: 2px; background: none; border: none; cursor: pointer; transition: color 0.2s; }
+  .mobile-nav button.active { color: var(--accent); }
+  .mobile-nav button i { font-size: 18px; }
+  
+  @media (min-width: 768px) { .mobile-nav { display: none; } .app-container { padding: 16px; } }
 </style>
 </head>
 <body>
+
+<!-- Ambient Orbs -->
+<div class="bg-orb orb-1"></div>
+<div class="bg-orb orb-2"></div>
+<div class="bg-orb orb-3"></div>
 
 <!-- HERO VIEW -->
 <div id="heroView" class="fixed inset-0 flex flex-col items-center justify-center z-10 p-4 fade-in">
   <div class="hero-bg"></div>
   <div class="hero-overlay"></div>
-  <div class="absolute top-6 right-6 z-20 flex gap-2">
-    <button id="themeToggleHero" class="btn-icon" style="background: var(--surface); width: 40px; height: 40px;" title="Toggle Theme"><i class="fa-solid fa-sun"></i></button>
-    <button id="heroSettingsBtn" class="btn-icon" style="background: var(--surface); width: 40px; height: 40px;" title="Settings"><i class="fa-solid fa-gear"></i></button>
+  <div class="absolute top-6 right-6 z-20 flex gap-3">
+    <button id="themeToggleHero" class="btn-icon louis-glass" style="width: 40px; height: 40px; border-radius: 12px;" title="Toggle Theme"><i class="fa-solid fa-sun"></i></button>
+    <button id="heroSettingsBtn" class="btn-icon louis-glass" style="width: 40px; height: 40px; border-radius: 12px;" title="Settings"><i class="fa-solid fa-gear"></i></button>
   </div>
-  <div class="relative z-20 w-full max-w-2xl text-center">
-    <h1 class="text-6xl md:text-7xl font-extrabold mb-4 tracking-tighter bg-gradient-to-b from-white to-gray-500 bg-clip-text text-transparent" style="color: var(--text);">Build with AI Teams.</h1>
-    <p class="mb-8 text-lg font-light" style="color: var(--muted);">Tag agents, delegate work in parallel, and build apps faster.</p>
-    <div class="flex justify-center gap-4 mb-6 text-sm">
-      <div class="flex gap-2">
-        <button class="chip active" data-mode="coding">Coding</button>
-        <button class="chip" data-mode="motion">Motion</button>
-      </div>
+  <div class="relative z-20 w-full max-w-xl text-center">
+    <h1 class="text-6xl md:text-7xl font-extrabold mb-4 tracking-tighter" style="color: var(--text);">Build with AI Teams.</h1>
+    <p class="mb-10 text-base font-light" style="color: var(--muted);">Tag agents, delegate work in parallel, and build apps faster.</p>
+    <div class="flex justify-center gap-3 mb-8 text-sm">
+      <button class="chip active" data-mode="coding">Coding</button>
+      <button class="chip" data-mode="motion">Motion</button>
     </div>
-    <div class="gradient-wrap max-w-2xl mx-auto">
-      <div class="floating-input p-2 flex flex-col gap-2">
-        <textarea id="heroInput" rows="2" placeholder="What do you want to build?" class="text-center" style="color: var(--text);"></textarea>
+    <div class="border-glow-card sweep-active max-w-xl mx-auto" style="--border-radius: 16px; --glow-padding: 10px;">
+      <div class="edge-light"></div>
+      <div class="border-glow-inner p-2 flex flex-col gap-2">
+        <textarea id="heroInput" rows="2" placeholder="What do you want to build?" class="text-center bg-transparent border-none outline-none resize-none w-full" style="color: var(--text); font-size: 15px; font-weight: 400; padding: 14px 18px;"></textarea>
         <div class="flex justify-center items-center p-2">
-          <button id="heroGenerateBtn" class="btn-send w-12 h-12 rounded-xl"><i class="fa-solid fa-arrow-up text-sm"></i></button>
+          <button id="heroGenerateBtn" class="btn-send w-12 h-12 rounded-xl"><i class="fa-solid fa-arrow-up text-base"></i></button>
         </div>
       </div>
     </div>
@@ -114,128 +335,141 @@
 
 <!-- BUILDER VIEW -->
 <div id="builderView" class="hidden app-container">
-  <div class="flex-1 flex overflow-hidden min-h-0">
-    <div class="w-[40%] min-w-[400px] flex flex-col min-h-0 border-r relative" style="background: var(--bg); border-color: var(--border);">
-      <div class="h-14 flex items-center justify-between px-4 border-b flex-shrink-0" style="border-color: var(--border);">
-        <button id="homeBtn" class="btn-icon" title="Back to Home"><i class="fa-solid fa-arrow-left"></i></button>
-        <div class="flex gap-1">
-          <button class="chip active" data-mode="coding">Coding</button>
-          <button class="chip" data-mode="motion">Motion</button>
+  <div class="flex-1 flex flex-col md:flex-row gap-3 overflow-hidden min-h-0">
+    
+    <!-- LEFT: CHAT -->
+    <div id="leftPanel" class="w-full md:w-[40%] min-w-0 min-h-0 border-glow-card">
+      <div class="edge-light"></div>
+      <div class="border-glow-inner flex flex-col min-h-0">
+        <div class="h-14 flex items-center justify-between px-4 border-b flex-shrink-0" style="border-color: var(--border);">
+          <button id="homeBtn" class="btn-icon" title="Back to Home"><i class="fa-solid fa-arrow-left text-sm"></i></button>
+          <div class="flex gap-2">
+            <button class="chip active" data-mode="coding">Coding</button>
+            <button class="chip" data-mode="motion">Motion</button>
+          </div>
+          <div class="flex gap-2">
+            <button id="themeToggleBuilder" class="btn-icon" title="Toggle Theme"><i class="fa-solid fa-sun text-sm"></i></button>
+            <button id="builderSettingsBtn" class="btn-icon" title="Settings"><i class="fa-solid fa-gear text-sm"></i></button>
+          </div>
         </div>
-        <div class="flex gap-1">
-          <button id="themeToggleBuilder" class="btn-icon" title="Toggle Theme"><i class="fa-solid fa-sun"></i></button>
-          <button id="builderSettingsBtn" class="btn-icon" title="Settings"><i class="fa-solid fa-gear"></i></button>
-        </div>
-      </div>
-      <div id="chatScroll" class="flex-1 overflow-y-auto p-6 space-y-6 hide-scrollbar min-h-0"></div>
-      <div class="p-4 border-t flex-shrink-0 relative" style="border-color: var(--border);">
-        <div id="mentionDropdown" class="mention-dropdown hidden"></div>
-        <div class="gradient-wrap">
-          <div class="floating-input p-2 flex flex-col">
+        <div id="chatScroll" class="flex-1 overflow-y-auto p-5 space-y-6 hide-scrollbar min-h-0" style="padding-bottom: 80px;"></div>
+        <div class="p-3 border-t flex-shrink-0 relative" style="border-color: var(--border); padding-bottom: 80px;">
+          <div id="mentionDropdown" class="mention-dropdown hidden"></div>
+          <div class="louis-glass rounded-2xl p-2 flex flex-col">
             <div id="imagePreviewContainer" class="flex gap-2 p-2 hidden"></div>
             <div class="flex items-end gap-2">
-              <button id="imgBtn" class="btn-icon mb-1 ml-1" title="Upload Image"><i class="fa-solid fa-image text-xs"></i></button>
+              <button id="imgBtn" class="btn-icon mb-1 ml-1" title="Upload Image"><i class="fa-solid fa-image text-sm"></i></button>
               <input type="file" id="imgInput" accept="image/*" multiple hidden>
-              <textarea id="chatInput" rows="1" placeholder="Reply or @mention an agent..." class="flex-1 px-2 py-2 text-sm border-none" style="color: var(--text);"></textarea>
-              <button id="sendBtn" class="btn-send mb-1 mr-1"><i class="fa-solid fa-arrow-up text-xs"></i></button>
+              <textarea id="chatInput" rows="1" placeholder="Reply or @mention..." class="flex-1 px-2 py-2 text-sm border-none bg-transparent outline-none resize-none" style="color: var(--text);"></textarea>
+              <button id="sendBtn" class="btn-send mb-1 mr-1"><i class="fa-solid fa-arrow-up text-sm"></i></button>
             </div>
           </div>
         </div>
       </div>
     </div>
 
-    <div class="flex-1 flex flex-col min-h-0 min-w-0" style="background: var(--surface);">
-      <div class="h-14 border-b flex items-center justify-between px-4 flex-shrink-0" style="border-color: var(--border);">
-        <div class="flex gap-1 h-full">
-          <button id="tabPreview" class="chip active">Preview</button>
-          <button id="tabCode" class="chip">Code</button>
-          <button id="tabStatus" class="chip">Status</button>
-          <button id="tabConsole" class="chip">Console</button>
-          <button id="tabTerminal" class="chip">Terminal</button>
-          <button id="tabAssets" class="chip">Assets</button>
-          <button id="tabHistory" class="chip">History</button>
-        </div>
-        <div class="flex items-center gap-2">
-          <div id="previewTools" class="flex gap-1">
-            <button class="btn-icon" data-device="desktop" title="Desktop"><i class="fa-solid fa-desktop text-xs"></i></button>
-            <button class="btn-icon" data-device="mobile" title="Mobile"><i class="fa-solid fa-mobile-screen text-xs"></i></button>
-            <button class="btn-icon" data-device="tablet" title="Tablet"><i class="fa-solid fa-tablet-screen-button text-xs"></i></button>
+    <!-- RIGHT: PREVIEW & TOOLS -->
+    <div id="rightPanel" class="hidden w-full md:w-[60%] flex flex-col min-h-0 min-w-0 border-glow-card">
+      <div class="edge-light"></div>
+      <div class="border-glow-inner flex flex-col min-h-0">
+        <div class="h-14 border-b flex items-center justify-between px-3 flex-shrink-0" style="border-color: var(--border);">
+          <div class="flex gap-2 h-full overflow-x-auto hide-scrollbar">
+            <button id="tabPreview" class="chip active">Preview</button>
+            <button id="tabCode" class="chip">Code</button>
+            <button id="tabStatus" class="chip">Status</button>
+            <button id="tabConsole" class="chip">Console</button>
+            <button id="tabTerminal" class="chip">Terminal</button>
+            <button id="tabAssets" class="chip">Assets</button>
+            <button id="tabHistory" class="chip">History</button>
           </div>
-          <button id="deployBtn" class="chip active" title="1-Click Deploy"><i class="fa-solid fa-rocket text-xs"></i> Deploy</button>
-        </div>
-      </div>
-
-      <div class="flex-1 overflow-hidden min-h-0">
-        <div id="panePreview" class="h-full flex flex-col" style="background: var(--bg);">
-          <div id="previewWrapper" class="flex-1 overflow-hidden p-4 flex justify-center items-center">
-            <iframe id="previewFrame" class="w-full h-full bg-white border-none" sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals"></iframe>
-          </div>
-        </div>
-        
-        <div id="paneCode" class="hidden h-full flex flex-row">
-          <div class="w-52 border-r overflow-y-auto p-2 flex-shrink-0" style="border-color: var(--border);">
-            <div id="fileTree" class="space-y-1"></div>
-          </div>
-          <div class="flex-1 flex flex-col min-w-0">
-            <div class="h-10 border-b flex items-center px-4 gap-4" style="background: var(--bg); border-color: var(--border);">
-              <span id="activeFileName" class="text-xs font-mono" style="color: var(--muted);">index.html</span>
-              <input type="text" id="findInput" placeholder="Find..." class="ml-auto bg-transparent text-xs border-b outline-none w-24" style="border-color: var(--border); color: var(--text);">
-              <input type="text" id="replaceInput" placeholder="Replace..." class="bg-transparent text-xs border-b outline-none w-24" style="border-color: var(--border); color: var(--text);">
-              <button id="replaceBtn" class="chip" style="padding: 2px 8px;">Replace</button>
+          <div class="flex items-center gap-2">
+            <div id="previewTools" class="hidden md:flex gap-1">
+              <button class="btn-icon" data-device="desktop" title="Desktop"><i class="fa-solid fa-desktop text-xs"></i></button>
+              <button class="btn-icon" data-device="mobile" title="Mobile"><i class="fa-solid fa-mobile-screen text-xs"></i></button>
+              <button class="btn-icon" data-device="tablet" title="Tablet"><i class="fa-solid fa-tablet-screen-button text-xs"></i></button>
             </div>
-            <div class="flex-1 overflow-auto p-4" style="background: var(--bg);">
-              <textarea id="codeEditor" class="w-full h-full bg-transparent font-mono text-sm outline-none resize-none" style="color: var(--text);" spellcheck="false"></textarea>
+            <button id="deployBtn" class="chip active" title="1-Click Deploy"><i class="fa-solid fa-rocket text-xs"></i> Deploy</button>
+          </div>
+        </div>
+
+        <div class="flex-1 overflow-hidden min-h-0">
+          <div id="panePreview" class="h-full flex flex-col">
+            <div id="previewWrapper" class="flex-1 overflow-hidden p-0 md:p-2 flex justify-center items-center">
+              <iframe id="previewFrame" class="w-full h-full bg-white border-none rounded-xl" sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals"></iframe>
             </div>
           </div>
-        </div>
+          
+          <div id="paneCode" class="hidden h-full flex flex-row">
+            <div class="w-32 md:w-56 border-r overflow-y-auto p-2 flex-shrink-0" style="border-color: var(--border);">
+              <div id="fileTree" class="space-y-1"></div>
+            </div>
+            <div class="flex-1 flex flex-col min-w-0">
+              <div class="h-10 border-b flex items-center px-3 gap-3" style="border-color: var(--border);">
+                <span id="activeFileName" class="text-xs font-mono" style="color: var(--muted);">index.html</span>
+                <input type="text" id="findInput" placeholder="Find" class="ml-auto bg-transparent text-xs border-b outline-none w-16 md:w-32" style="border-color: var(--border); color: var(--text);">
+                <input type="text" id="replaceInput" placeholder="Replace" class="bg-transparent text-xs border-b outline-none w-16 md:w-32" style="border-color: var(--border); color: var(--text);">
+                <button id="replaceBtn" class="chip" style="padding: 4px 8px; font-size: 11px;">Replace</button>
+              </div>
+              <div class="flex-1 overflow-auto p-3">
+                <textarea id="codeEditor" class="w-full h-full bg-transparent font-mono text-sm outline-none resize-none" style="color: var(--text);" spellcheck="false"></textarea>
+              </div>
+            </div>
+          </div>
 
-        <div id="paneStatus" class="hidden h-full overflow-y-auto p-4">
-          <div class="text-xs font-semibold mb-2 uppercase" style="color: var(--muted);">Team Activity</div>
-          <div id="statusList"></div>
-        </div>
+          <div id="paneStatus" class="hidden h-full overflow-y-auto p-4">
+            <div class="text-xs font-semibold mb-2 uppercase" style="color: var(--muted);">Team Activity</div>
+            <div id="statusList"></div>
+          </div>
 
-        <div id="paneConsole" class="hidden h-full bg-black p-4 overflow-y-auto font-mono text-xs text-green-400">
-          <div id="consoleLog">Console initialized.</div>
-        </div>
+          <div id="paneConsole" class="hidden h-full bg-black p-4 overflow-y-auto font-mono text-xs text-green-400">
+            <div id="consoleLog">Console initialized.</div>
+          </div>
 
-        <div id="paneTerminal" class="hidden h-full bg-black p-4 overflow-y-auto font-mono text-xs text-green-400">
-          <div id="terminalLog">Sakura OS v1.0. Type 'help' for commands.</div>
-          <div class="flex"><span class="mr-2">$</span><input type="text" id="terminalInput" class="terminal-input flex-1 bg-transparent outline-none"></div>
-        </div>
+          <div id="paneTerminal" class="hidden h-full bg-black p-4 overflow-y-auto font-mono text-xs text-green-400">
+            <div id="terminalLog">Sakura OS v1.0. Type 'help' for commands.</div>
+            <div class="flex"><span class="mr-2">$</span><input type="text" id="terminalInput" class="terminal-input flex-1 bg-transparent outline-none"></div>
+          </div>
 
-        <div id="paneAssets" class="hidden h-full overflow-y-auto p-4 grid grid-cols-3 gap-4">
-          <div class="text-sm col-span-3" style="color: var(--muted);">Generated assets will appear here.</div>
-        </div>
+          <div id="paneAssets" class="hidden h-full overflow-y-auto p-4 grid grid-cols-2 md:grid-cols-3 gap-3">
+            <div class="text-sm col-span-3" style="color: var(--muted);">Generated assets will appear here.</div>
+          </div>
 
-        <div id="paneHistory" class="hidden h-full overflow-y-auto p-4 space-y-2">
-          <div class="text-xs" style="color: var(--muted);">Version History (Click to restore)</div>
-          <div id="historyList"></div>
+          <div id="paneHistory" class="hidden h-full overflow-y-auto p-4 space-y-3">
+            <div class="text-xs" style="color: var(--muted);">Version History (Click to restore)</div>
+            <div id="historyList"></div>
+          </div>
         </div>
       </div>
     </div>
+  </div>
+  
+  <!-- Floating Mobile Nav -->
+  <div class="mobile-nav md:hidden">
+    <button id="mNavChat" class="active"><i class="fa-solid fa-comment-dots"></i><span>Chat</span></button>
+    <button id="mNavPreview"><i class="fa-solid fa-eye"></i><span>Preview</span></button>
+    <button id="mNavCode"><i class="fa-solid fa-code"></i><span>Code</span></button>
+    <button id="mNavTools"><i class="fa-solid fa-toolbox"></i><span>Tools</span></button>
   </div>
 </div>
 
 <!-- SETTINGS MODAL -->
 <div id="settingsModal" class="hidden modal-bg">
-  <div class="modal-card">
-    <div class="p-6">
-      <div class="flex justify-between items-center mb-6">
-        <h2 class="text-xl font-bold">Settings & Agents</h2>
-        <button id="closeSettingsBtn" class="btn-icon"><i class="fa-solid fa-xmark"></i></button>
+  <div class="modal-card louis-glass">
+    <div class="flex justify-between items-center mb-6">
+      <h2 class="text-xl font-bold">Settings & Agents</h2>
+      <button id="closeSettingsBtn" class="btn-icon"><i class="fa-solid fa-xmark text-lg"></i></button>
+    </div>
+    <div class="space-y-6">
+      <div>
+        <h3 class="text-xs font-semibold mb-2 uppercase" style="color: var(--muted);">Default AI Model</h3>
+        <select id="settingsModelSelect" class="input-field"></select>
       </div>
-      <div class="space-y-6">
-        <div>
-          <h3 class="text-xs font-semibold mb-2 uppercase" style="color: var(--muted);">Default AI Model</h3>
-          <select id="settingsModelSelect" class="input-field"></select>
+      <div>
+        <div class="flex justify-between items-center mb-3">
+          <h3 class="text-xs font-semibold uppercase" style="color: var(--muted);">Multi-Agent System</h3>
+          <button id="addAgentBtn" class="chip"><i class="fa-solid fa-plus"></i> Add Agent</button>
         </div>
-        <div>
-          <div class="flex justify-between items-center mb-3">
-            <h3 class="text-xs font-semibold uppercase" style="color: var(--muted);">Multi-Agent System</h3>
-            <button id="addAgentBtn" class="chip"><i class="fa-solid fa-plus"></i> Add Agent</button>
-          </div>
-          <div id="agentListSettings" class="space-y-3"></div>
-        </div>
+        <div id="agentListSettings" class="space-y-3"></div>
       </div>
     </div>
   </div>
@@ -248,11 +482,14 @@ var state = {
   view: 'hero', mode: 'coding', messages: [], files: {}, versions: [], activeFile: null,
   isGenerating: false, abortController: null, selectedModel: 'openai-fast',
   agents: [], pendingImages: [], pinnedFiles: [], auto: false, critic: false, heal: false,
-  activityLog: []
+  activityLog: [], activeTab: 'preview', mobileView: 'chat'
 };
 
 var scriptStart = '<' + 'script>';
 var scriptEnd = '<' + '/script>';
+
+// Globally track the strands animation frame to cancel it when re-rendering
+var currentStrandRaf = null;
 
 function getSystemPrompt(agentId) {
   var agent = state.agents.find(function(a) { return a.id === agentId; });
@@ -307,6 +544,7 @@ function init() {
     loadLocal();
     renderAgentsSettings();
     setupConsoleInterceptor();
+    setMobileView('chat');
   } catch(e) {
     console.error("Init Error:", e);
   }
@@ -391,7 +629,7 @@ function setupEvents() {
   devices.forEach(function(b) {
     b.addEventListener('click', function() {
       var frame = document.getElementById('previewFrame');
-      frame.className = 'bg-white border-none';
+      frame.className = 'bg-white border-none rounded-xl';
       if (b.dataset.device !== 'desktop') frame.classList.add('device-frame', 'device-' + b.dataset.device);
     });
   });
@@ -436,12 +674,57 @@ function setupEvents() {
   });
   chatInput.addEventListener('input', handleMentionTyping);
 
+  // Sweep animation triggers
+  chatInput.addEventListener('focus', function() { document.getElementById('leftPanel').classList.add('sweep-active'); });
+  chatInput.addEventListener('blur', function() { if (!state.isGenerating) document.getElementById('leftPanel').classList.remove('sweep-active'); });
+
   document.getElementById('imgBtn').addEventListener('click', function() { document.getElementById('imgInput').click(); });
   document.getElementById('imgInput').addEventListener('change', handleImageUpload);
 
   document.getElementById('codeEditor').addEventListener('input', function() {
     if (state.activeFile) state.files[state.activeFile] = this.value;
   });
+
+  document.getElementById('mNavChat').addEventListener('click', function() { setMobileView('chat'); });
+  document.getElementById('mNavPreview').addEventListener('click', function() { setMobileView('right', 'preview'); });
+  document.getElementById('mNavCode').addEventListener('click', function() { setMobileView('right', 'code'); });
+  document.getElementById('mNavTools').addEventListener('click', function() { setMobileView('right', 'status'); });
+}
+
+function setMobileView(view, tab) {
+  state.mobileView = view;
+  if (tab) state.activeTab = tab;
+  
+  var left = document.getElementById('leftPanel');
+  var right = document.getElementById('rightPanel');
+  var mNavBtns = document.querySelectorAll('.mobile-nav button');
+  
+  mNavBtns.forEach(function(b) { b.classList.remove('active'); });
+  
+  if (window.innerWidth < 768) {
+    if (view === 'chat') {
+      left.classList.remove('hidden');
+      left.style.width = '100%';
+      right.classList.add('hidden');
+      document.getElementById('mNavChat').classList.add('active');
+    } else {
+      left.classList.add('hidden');
+      right.classList.remove('hidden');
+      right.style.width = '100%';
+      if (tab) setTab(tab);
+      if (view === 'right' && (tab === 'preview' || tab === 'code')) {
+         document.querySelector('#mNav' + (tab.charAt(0).toUpperCase() + tab.slice(1))).classList.add('active');
+      } else {
+         document.getElementById('mNavTools').classList.add('active');
+      }
+    }
+  } else {
+    left.classList.remove('hidden');
+    right.classList.remove('hidden');
+    left.style.width = '40%';
+    right.style.width = '60%';
+    if (tab) setTab(tab);
+  }
 }
 
 function setupConsoleInterceptor() {
@@ -489,26 +772,26 @@ function renderAgentsSettings() {
         '<img src="' + pfpSrc + '" class="pfp-preview" id="pfp-' + a.id + '">' +
         '<div class="flex-1">' +
           '<div class="flex items-center gap-2 mb-2">' +
-            '<input type="text" value="' + safeName.replace(/"/g, '&quot;') + '" data-field="name" data-id="' + a.id + '" class="input-field" placeholder="Agent Name">' +
+            '<input type="text" value="' + safeName.replace(/"/g, '&quot;') + '" data-field="name" data-id="' + a.id + '" class="input-field" placeholder="Agent Name" style="font-size: 14px; padding: 8px 12px;">' +
             '<label class="switch"><input type="checkbox" data-field="isActive" data-id="' + a.id + '" ' + (a.isActive ? 'checked' : '') + '><span class="slider"></span></label>' +
           '</div>' +
           '<div class="flex gap-2 items-center">' +
-            '<select data-field="role" data-id="' + a.id + '" class="input-field" style="width: auto;">' +
-              '<option value="lead" ' + (a.role === 'lead' ? 'selected' : '') + '>Lead Agent</option>' +
-              '<option value="sub" ' + (a.role === 'sub' ? 'selected' : '') + '>Sub Agent</option>' +
+            '<select data-field="role" data-id="' + a.id + '" class="input-field" style="width: auto; font-size: 12px; padding: 6px;">' +
+              '<option value="lead" ' + (a.role === 'lead' ? 'selected' : '') + '>Lead</option>' +
+              '<option value="sub" ' + (a.role === 'sub' ? 'selected' : '') + '>Sub</option>' +
             '</select>' +
-            '<select data-field="pingOnly" data-id="' + a.id + '" class="input-field" style="width: auto;">' +
-              '<option value="false" ' + (!a.pingOnly ? 'selected' : '') + '>Auto (Available for Lead)</option>' +
-              '<option value="true" ' + (a.pingOnly ? 'selected' : '') + '>Ping Only (@mention)</option>' +
+            '<select data-field="pingOnly" data-id="' + a.id + '" class="input-field" style="width: auto; font-size: 12px; padding: 6px;">' +
+              '<option value="false" ' + (!a.pingOnly ? 'selected' : '') + '>Auto</option>' +
+              '<option value="true" ' + (a.pingOnly ? 'selected' : '') + '>Ping Only</option>' +
             '</select>' +
-            '<button class="chip pfp-btn" data-id="' + a.id + '"><i class="fa-solid fa-camera"></i></button>' +
+            '<button class="chip pfp-btn" data-id="' + a.id + '" style="padding: 6px;"><i class="fa-solid fa-camera text-xs"></i></button>' +
             '<input type="file" id="pfpInput-' + a.id + '" data-pfp-input="' + a.id + '" accept="image/*" class="hidden">' +
-            '<button class="btn-icon ml-auto" data-del="' + a.id + '" style="border: 1px solid var(--border);"><i class="fa-solid fa-trash text-xs"></i></button>' +
+            '<button class="btn-icon ml-auto" data-del="' + a.id + '"><i class="fa-solid fa-trash text-xs"></i></button>' +
           '</div>' +
         '</div>' +
       '</div>' +
-      '<textarea data-field="prompt" data-id="' + a.id + '" rows="2" class="input-field mb-2" placeholder="System Prompt">' + safePrompt + '</textarea>' +
-      '<select data-field="model" data-id="' + a.id + '" class="input-field" data-model-select="' + a.id + '"></select>' +
+      '<textarea data-field="prompt" data-id="' + a.id + '" rows="2" class="input-field mb-2" placeholder="System Prompt" style="font-size: 13px; padding: 8px 12px;">' + safePrompt + '</textarea>' +
+      '<select data-field="model" data-id="' + a.id + '" class="input-field" data-model-select="' + a.id + '" style="font-size: 13px; padding: 8px 12px;"></select>' +
     '</div>';
   }).join('');
 
@@ -572,8 +855,8 @@ function handleMentionTyping(e) {
       dropdown.innerHTML = activeAgents.map(function(a) {
         var pfpSrc = a.pfp || ('https://placehold.co/20x20/18181b/71717a?text=' + encodeURIComponent(a.name ? a.name.charAt(0) : 'A'));
         return '<div class="mention-item" data-name="' + a.name + '">' +
-          '<img src="' + pfpSrc + '" class="w-5 h-5 rounded-full">' +
-          '<span>' + a.name + '</span>' +
+          '<img src="' + pfpSrc + '" class="w-6 h-6 rounded-full">' +
+          '<span style="font-size: 14px;">' + a.name + '</span>' +
         '</div>';
       }).join('');
       dropdown.classList.remove('hidden');
@@ -603,7 +886,7 @@ function handleImageUpload(e) {
     reader.onload = function(ev) {
       state.pendingImages.push(ev.target.result);
       var img = document.createElement('img');
-      img.src = ev.target.result; img.style.maxWidth = '60px'; img.style.maxHeight = '60px'; img.style.borderRadius = '6px';
+      img.src = ev.target.result; img.style.maxWidth = '60px'; img.style.maxHeight = '60px'; img.style.borderRadius = '8px';
       container.appendChild(img);
     };
     reader.readAsDataURL(files[i]);
@@ -618,7 +901,8 @@ function startBuild(prompt) {
   document.getElementById('builderView').classList.remove('hidden');
   state.messages = []; state.files = {};
   state.messages.push({ role: 'user', content: prompt });
-  addActivity('User', 'Started build with prompt: ' + prompt.substring(0, 30) + '...');
+  addActivity('User', 'Started build');
+  setMobileView('chat');
   renderChat();
   runAgentLoop();
 }
@@ -647,13 +931,13 @@ function sendMessage() {
 function runAgentLoop() {
   state.isGenerating = true;
   document.getElementById('sendBtn').classList.add('hidden');
+  document.getElementById('leftPanel').classList.add('sweep-active');
   
   var activeAgents = state.agents.filter(function(a) { return a.isActive && (a.role === 'lead' || a.role === 'sub'); });
   if (activeAgents.length === 0) {
     state.messages.push({ role: 'assistant', content: "No active agents! Please enable an agent in Settings." });
     renderChat();
-    state.isGenerating = false;
-    document.getElementById('sendBtn').classList.remove('hidden');
+    finishGeneration("");
     return;
   }
 
@@ -685,16 +969,14 @@ function runAgentLoop() {
     renderChat();
     addActivity(targetAgent.name, 'Replied');
 
-    // AI Console Access
     if (response.includes('[GET_CONSOLE]')) {
       var logs = document.getElementById('consoleLog').innerText;
       state.messages.push({ role: 'user', content: 'CONSOLE LOGS:\n' + logs + '\n\nPlease analyze these logs and fix any errors in the code.', hidden: true });
       addActivity('System', 'Fed console logs to ' + targetAgent.name);
-      runAgentLoop(); // Trigger follow-up
+      runAgentLoop();
       return;
     }
 
-    // Parse ALL delegation matches for Parallel Execution
     var delegateRegex = /\[DELEGATE:\s*([^\]]+?)\s*:\s*([^\]]+?)\]/g;
     var delegateMatches = [];
     var m;
@@ -704,7 +986,6 @@ function runAgentLoop() {
 
     if (targetAgent.role === 'lead' && delegateMatches.length > 0) {
       var promises = [];
-      var delegatedAgentsInfo = [];
       
       delegateMatches.forEach(function(match) {
         var subName = match.name;
@@ -724,7 +1005,6 @@ function runAgentLoop() {
           
           var subHistory = state.messages.filter(function(m) { return !m.isThinking; }).concat([{role: 'user', content: task}]);
           
-          // Execute in Parallel
           promises.push(callAI(subAgent, subHistory).then(function(subResponse) {
             subMsg.content = subResponse || "[No response]";
             subMsg.isThinking = false;
@@ -736,7 +1016,6 @@ function runAgentLoop() {
       });
       
       if (promises.length > 0) {
-        // Wait for ALL sub-agents to finish simultaneously
         Promise.all(promises).then(function(results) {
             var report = "Sub-agents reported back in parallel:\n\n";
             results.forEach(function(r) {
@@ -786,6 +1065,9 @@ function runAgentLoop() {
     }
     state.isGenerating = false;
     document.getElementById('sendBtn').classList.remove('hidden');
+    if (!document.getElementById('chatInput').matches(':focus')) {
+      document.getElementById('leftPanel').classList.remove('sweep-active');
+    }
     saveLocal();
   }
 }
@@ -819,7 +1101,6 @@ function callAI(agent, history) {
         reader.read().then(function(result) {
           if (result.done) {
             if (fullText.trim() === '') {
-              // Fallback if stream was empty
               var lastMsgFallback = apiMessages[apiMessages.length-1].content || "Hello";
               if (Array.isArray(lastMsgFallback)) lastMsgFallback = lastMsgFallback[0].text;
               fetch('https://text.pollinations.ai/' + encodeURIComponent(lastMsgFallback) + '?model=' + modelToUse + '&system=' + encodeURIComponent(getSystemPrompt(agent.id)))
@@ -874,12 +1155,12 @@ function parseDynamicContent(text) {
   if (match) {
     cleanText = cleanText.replace(match[0], '');
     var items = match[1].split(',').map(function(i) { return i.trim(); });
-    var todoHtml = '<div class="mt-3 p-3 rounded-lg border space-y-1" style="background: var(--surface-2); border-color: var(--border);">';
+    var todoHtml = '<div class="mt-3 p-3 rounded-xl border space-y-1" style="background: rgba(255,255,255,0.03); border-color: var(--border);">';
     items.forEach(function(item, i) {
       var isDone = cleanText.includes('[done: ' + (i+1) + ']') || cleanText.includes('[done:' + (i+1) + ']');
       var isDoing = cleanText.includes('[doing: ' + (i+1) + ']') || cleanText.includes('[doing:' + (i+1) + ']');
       cleanText = cleanText.replace(new RegExp('\\[(done|doing):?\\s*' + (i+1) + '\\]', 'g'), '');
-      var icon = isDone ? '<i class="fa-solid fa-check-circle text-green-500"></i>' : (isDoing ? '<i class="fa-solid fa-spinner fa-spin text-violet-500"></i>' : '<i class="fa-regular fa-circle text-gray-600"></i>');
+      var icon = isDone ? '<i class="fa-solid fa-check-circle text-green-500 text-xs"></i>' : (isDoing ? '<i class="fa-solid fa-spinner fa-spin text-violet-500 text-xs"></i>' : '<i class="fa-regular fa-circle text-gray-600 text-xs"></i>');
       var color = isDone ? 'line-through text-gray-500' : (isDoing ? 'text-white' : 'text-gray-400');
       todoHtml += '<div class="todo-item ' + color + '">' + icon + ' ' + item + '</div>';
     });
@@ -891,37 +1172,95 @@ function parseDynamicContent(text) {
   if (match) {
     cleanText = cleanText.replace(match[0], '');
     var opts = match[1].split('|').map(function(o) { return o.trim(); });
-    components.push('<div class="flex gap-2 flex-wrap mt-2">' + opts.map(function(o) { return '<button class="chip opt-single" data-val="' + o + '">' + o + '</button>'; }).join('') + '</div>');
+    components.push('<div class="flex gap-2 flex-wrap mt-3">' + opts.map(function(o) { return '<button class="chip opt-single" data-val="' + o + '">' + o + '</button>'; }).join('') + '</div>');
   }
 
   match = cleanText.match(/\[multioptions:([^\]]+)\]/);
   if (match) {
     cleanText = cleanText.replace(match[0], '');
     var mopts = match[1].split('|').map(function(o) { return o.trim(); });
-    components.push('<div class="flex gap-2 flex-wrap mt-2 items-center">' + mopts.map(function(o) { return '<button class="chip opt-multi" data-val="' + o + '">' + o + '</button>'; }).join('') + '<button class="chip active opt-submit hidden">Submit</button></div>');
+    components.push('<div class="flex gap-2 flex-wrap mt-3 items-center">' + mopts.map(function(o) { return '<button class="chip opt-multi" data-val="' + o + '">' + o + '</button>'; }).join('') + '<button class="chip active opt-submit hidden">Submit</button></div>');
   }
 
   match = cleanText.match(/\[input:([^\]]+)\]/);
   if (match) {
     cleanText = cleanText.replace(match[0], '');
-    components.push('<div class="flex gap-2 mt-2"><input type="text" class="input-field opt-input" placeholder="' + match[1].trim() + '"><button class="chip active opt-input-send">Send</button></div>');
+    components.push('<div class="flex gap-2 mt-3"><input type="text" class="input-field opt-input" placeholder="' + match[1].trim() + '" style="font-size: 14px; padding: 8px;"><button class="chip active opt-input-send">Send</button></div>');
   }
 
   return { text: cleanText, components: components.join('') };
 }
 
+// Strands Canvas Animation Logic
+function initStrands(container) {
+  if (currentStrandRaf) cancelAnimationFrame(currentStrandRaf);
+  
+  var canvas = container.querySelector('canvas');
+  if (!canvas) return;
+  var ctx = canvas.getContext('2d');
+  
+  // Set actual canvas size
+  canvas.width = container.clientWidth;
+  canvas.height = container.clientHeight;
+  
+  var colors = ['rgba(139, 92, 246, 0.9)', 'rgba(34, 211, 238, 0.9)', 'rgba(244, 63, 94, 0.9)'];
+  var strands = [];
+  var numStrands = 6;
+  
+  for (var i = 0; i < numStrands; i++) {
+    strands.push({
+      x: (canvas.width / (numStrands + 1)) * (i + 1),
+      phase: Math.random() * Math.PI * 2,
+      speed: 0.05 + Math.random() * 0.05,
+      amp: 6 + Math.random() * 6,
+      color: colors[i % colors.length]
+    });
+  }
+  
+  var t = 0;
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.lineWidth = 1.5;
+    
+    strands.forEach(function(s) {
+      ctx.beginPath();
+      ctx.strokeStyle = s.color;
+      ctx.shadowBlur = 8;
+      ctx.shadowColor = s.color;
+      
+      for (var y = 0; y <= canvas.height; y += 2) {
+        var x = s.x + Math.sin(y * 0.15 + s.phase + t * s.speed) * s.amp;
+        if (y === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+    });
+    
+    ctx.shadowBlur = 0;
+    t++;
+    currentStrandRaf = requestAnimationFrame(draw);
+  }
+  draw();
+}
+
 function renderChat() {
+  // Cancel previous strands animation before re-rendering HTML
+  if (currentStrandRaf) {
+    cancelAnimationFrame(currentStrandRaf);
+    currentStrandRaf = null;
+  }
+
   var c = document.getElementById('chatScroll');
   c.innerHTML = state.messages.filter(function(m) { return !m.hidden; }).map(function(m, idx) {
     if (m.role === 'user') {
       var imgHtml = '';
-      if (m.images && m.images.length > 0) imgHtml = '<div class="flex gap-1 mb-1">' + m.images.map(function(img) { return '<img src="' + img + '" style="max-width:60px; border-radius:4px;">'; }).join('') + '</div>';
+      if (m.images && m.images.length > 0) imgHtml = '<div class="flex gap-1 mb-2">' + m.images.map(function(img) { return '<img src="' + img + '" style="max-width:60px; border-radius:8px;">'; }).join('') + '</div>';
       var content = m.content.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
       content = content.replace(/@([a-zA-Z0-9_ ]+)/g, '<span class="tag-highlight">@$1</span>').replace(/\n/g, '<br>');
       return '<div class="flex justify-end mb-6">' +
         '<div class="max-w-[85%]">' +
           '<div class="text-xs mb-1 text-right" style="color: var(--muted);">You</div>' +
-          '<div class="rounded-xl rounded-br-sm px-4 py-2 text-sm" style="background: var(--surface-2); color: var(--text);">' + imgHtml + content + '</div>' +
+          '<div class="rounded-2xl rounded-br-sm px-4 py-3 text-sm" style="background: var(--surface-2); backdrop-filter: blur(10px); color: var(--text); border: 1px solid var(--border);">' + imgHtml + content + '</div>' +
         '</div>' +
       '</div>';
     }
@@ -929,32 +1268,40 @@ function renderChat() {
     var agent = state.agents.find(function(a) { return a.id === m.agentId; });
     var agentName = (agent && agent.name) ? agent.name : 'AI';
     var agentColor = (agent && agent.role === 'lead') ? 'var(--accent)' : 'var(--accent-2)';
-    var pfpHtml = (agent && agent.pfp) ? '<img src="' + agent.pfp + '" class="w-8 h-8 rounded-full mr-3 mt-1">' : '<div class="w-8 h-8 rounded-full flex-shrink-0 flex items-center justify-center text-xs mr-3 mt-1" style="background: ' + agentColor + '; color: #000; font-weight: bold;">' + agentName.charAt(0) + '</div>';
+    var pfpHtml = (agent && agent.pfp) ? '<img src="' + agent.pfp + '" class="w-8 h-8 rounded-xl mr-3 mt-1">' : '<div class="w-8 h-8 rounded-xl flex-shrink-0 flex items-center justify-center text-xs mr-3 mt-1" style="background: ' + agentColor + '; color: #000; font-weight: bold;">' + agentName.charAt(0) + '</div>';
     
     var contentHtml = '';
     if (m.isThinking && m.content === '') {
-      contentHtml = '<span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span>';
+      // Replaced typing dots with Strands Container
+      contentHtml = '<div class="strands-container" style="width: 120px; height: 45px;"><canvas></canvas></div>';
     } else {
       var parsed = parseDynamicContent(m.content);
       var cleanText = parsed.text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-      cleanText = cleanText.replace(/```(\w+)?\n([\s\S]*?)```/g, '<div class="text-xs mt-2 mb-2" style="color: var(--muted);"><i class="fa-solid fa-check"></i> Code generated</div>');
+      cleanText = cleanText.replace(/```(\w+)?\n([\s\S]*?)```/g, '<div class="text-xs mt-2 mb-2 flex items-center gap-1" style="color: var(--muted);"><i class="fa-solid fa-check"></i> Code generated</div>');
       cleanText = cleanText.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
       contentHtml = cleanText + parsed.components;
     }
 
-    var replyBtn = !m.isThinking ? '<button class="btn-icon reply-btn" data-name="' + agentName + '" style="width:20px; height:20px; position:absolute; right:-30px; top:0; opacity:0.5;"><i class="fa-solid fa-reply text-[10px]"></i></button>' : '';
+    var replyBtn = !m.isThinking ? '<button class="btn-icon reply-btn" data-name="' + agentName + '" style="width:24px; height:24px; position:absolute; right:-30px; top:0; opacity:0.5;"><i class="fa-solid fa-reply text-xs"></i></button>' : '';
 
     return '<div class="flex mb-6 relative">' +
       pfpHtml +
       '<div class="flex-1 min-w-0 max-w-[85%]">' +
         '<div class="agent-tag" style="color: ' + agentColor + ';">' + agentName + ' ' + ((agent && agent.role === 'lead') ? '<i class="fa-solid fa-crown text-[10px] ml-1"></i>' : '') + '</div>' +
-        '<div class="text-sm leading-relaxed rounded-xl rounded-tl-sm px-4 py-2 inline-block" style="background: var(--surface); color: var(--text);">' + contentHtml + '</div>' +
+        '<div class="text-sm leading-relaxed rounded-2xl rounded-tl-sm px-4 py-3 inline-block" style="background: var(--surface-2); backdrop-filter: blur(10px); border: 1px solid var(--border); color: var(--text);">' + contentHtml + '</div>' +
         replyBtn +
       '</div>' +
     '</div>';
   }).join('');
   
   attachChatEvents();
+  
+  // Start Strands Animation if a thinking message is present
+  var strandContainer = c.querySelector('.strands-container');
+  if (strandContainer) {
+    initStrands(strandContainer);
+  }
+  
   c.scrollTop = c.scrollHeight;
 }
 
@@ -1015,14 +1362,17 @@ function updatePreview() {
   document.getElementById('previewFrame').srcdoc = doc;
   var assetsPane = document.getElementById('paneAssets');
   var imgs = html.match(/https:\/\/image\.pollinations\.ai\/prompt\/[^\s"?]+/g) || [];
-  assetsPane.innerHTML = imgs.length > 0 ? imgs.map(function(url) { return '<img src="' + url + '" class="rounded-lg">'; }).join('') : '<div class="text-sm col-span-3" style="color: var(--muted);">Generated assets will appear here.</div>';
+  assetsPane.innerHTML = imgs.length > 0 ? imgs.map(function(url) { return '<img src="' + url + '" class="rounded-xl">'; }).join('') : '<div class="text-sm col-span-3" style="color: var(--muted);">Generated assets will appear here.</div>';
 }
 
 function setTab(tab) {
+  state.activeTab = tab;
   var tabs = ['preview', 'code', 'status', 'console', 'terminal', 'assets', 'history'];
   tabs.forEach(function(t) {
-    document.getElementById('pane' + t.charAt(0).toUpperCase() + t.slice(1)).classList.toggle('hidden', t !== tab);
-    document.getElementById('tab' + t.charAt(0).toUpperCase() + t.slice(1)).classList.toggle('active', t === tab);
+    var pane = document.getElementById('pane' + t.charAt(0).toUpperCase() + t.slice(1));
+    var btn = document.getElementById('tab' + t.charAt(0).toUpperCase() + t.slice(1));
+    if (pane) pane.classList.toggle('hidden', t !== tab);
+    if (btn) btn.classList.toggle('active', t === tab);
   });
   if (tab === 'code') renderFileTree();
   if (tab === 'history') renderHistory();
@@ -1031,7 +1381,7 @@ function setTab(tab) {
 function renderFileTree() {
   var tree = document.getElementById('fileTree');
   tree.innerHTML = Object.keys(state.files).map(function(f) {
-    return '<div class="file-tree-item ' + (f === state.activeFile ? 'active' : '') + '" data-file="' + f + '" style="padding: 6px 8px; font-size: 12px; cursor: pointer; border-radius: 4px; display: flex; justify-content: space-between; align-items: center; ' + (f === state.activeFile ? 'background: rgba(139,92,246,0.1); color: var(--text);' : 'color: var(--muted);') + '">' +
+    return '<div class="file-tree-item ' + (f === state.activeFile ? 'active' : '') + '" data-file="' + f + '" style="padding: 6px 8px; font-size: 12px; cursor: pointer; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; ' + (f === state.activeFile ? 'background: rgba(139,92,246,0.1); color: var(--text);' : 'color: var(--muted);') + '">' +
       '<span><i class="fa-solid fa-code text-[10px]"></i> ' + f + '</span>' +
       '<i class="fa-solid fa-thumbtack pin-btn" data-file="' + f + '" style="opacity: ' + (state.pinnedFiles.includes(f) ? '1' : '0.2') + '; color: ' + (state.pinnedFiles.includes(f) ? 'var(--accent)' : 'var(--muted)') + '; font-size: 10px; cursor: pointer;"></i>' +
     '</div>';
@@ -1065,7 +1415,7 @@ function renderFileTree() {
 function renderHistory() {
   var list = document.getElementById('historyList');
   list.innerHTML = state.versions.map(function(v, i) {
-    return '<div class="p-3 rounded-lg mb-2 cursor-pointer border border-transparent" data-idx="' + i + '" style="background: var(--bg);">' +
+    return '<div class="p-3 rounded-xl mb-2 cursor-pointer border border-transparent" data-idx="' + i + '" style="background: rgba(255,255,255,0.03);">' +
       '<div class="text-sm">Version ' + (i + 1) + '</div>' +
       '<div class="text-xs" style="color: var(--muted);">' + new Date(v.time).toLocaleTimeString() + '</div>' +
     '</div>';
@@ -1081,7 +1431,7 @@ function renderHistory() {
 
 function saveLocal() {
   try {
-    localStorage.setItem('sakura_dev_v14', JSON.stringify({
+    localStorage.setItem('sakura_dev_v20', JSON.stringify({
       mode: state.mode, files: state.files, agents: state.agents, selectedModel: state.selectedModel, versions: state.versions
     }));
   } catch(e){}
@@ -1089,7 +1439,7 @@ function saveLocal() {
 
 function loadLocal() {
   try {
-    var s = localStorage.getItem('sakura_dev_v14');
+    var s = localStorage.getItem('sakura_dev_v20');
     if (s) {
       var p = JSON.parse(s);
       state.mode = p.mode || 'coding';
@@ -1115,6 +1465,7 @@ function loadLocal() {
         state.messages.push({role: 'assistant', content: 'Welcome back! I have loaded your files.', isThinking: false});
         document.getElementById('heroView').classList.add('hidden');
         document.getElementById('builderView').classList.remove('hidden');
+        setMobileView('chat');
         renderFileTree(); updatePreview(); renderChat();
       }
     }
