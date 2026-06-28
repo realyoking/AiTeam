@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Sakura Dev — Border Glow AI</title>
+<title>Sakura Dev — Parallel AI Teams</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
@@ -17,6 +17,8 @@
     --accent: #8b5cf6; --accent-2: #22d3ee; --accent-3: #f43f5e;
     --hero-overlay: linear-gradient(180deg, rgba(5,5,10,0.4) 0%, rgba(5,5,10,0.9) 80%, var(--bg) 100%);
     --card-bg: #111118;
+    --chat-bubble-user: rgba(30, 30, 45, 0.6);
+    --chat-bubble-ai: rgba(20, 20, 30, 0.4);
   }
   :root[data-theme="light"] {
     --bg: #eef2f6; 
@@ -26,6 +28,8 @@
     --text: #1d1d1f; --muted: #6e6e73;
     --hero-overlay: linear-gradient(180deg, rgba(238,242,246,0.4) 0%, rgba(238,242,246,0.9) 80%, var(--bg) 100%);
     --card-bg: #ffffff;
+    --chat-bubble-user: rgba(0, 0, 0, 0.05);
+    --chat-bubble-ai: rgba(255, 255, 255, 0.8);
   }
   
   * { font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; box-sizing: border-box; }
@@ -225,13 +229,11 @@
     height: 100%;
   }
 
-  /* Trigger sweep animation when active */
   .border-glow-card.sweep-active::before,
   .border-glow-card.sweep-active::after,
   .border-glow-card.sweep-active > .edge-light {
     animation: sweep 4s linear infinite;
   }
-  /* ========================================== */
 
   .floating-input textarea { background: transparent; border: none; outline: none; resize: none; width: 100%; color: var(--text); font-size: 15px; font-weight: 400; padding: 14px 18px; }
 
@@ -253,18 +255,8 @@
 
   .agent-tag { font-size: 11px; font-weight: 600; padding: 3px 8px; border-radius: 6px; display: inline-block; margin-bottom: 4px; background: rgba(255,255,255,0.05); }
   
-  /* USER PROVIDED STRANDS CSS */
-  .strands-container {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    background: transparent;
-  }
-  .strands-container canvas {
-    display: block;
-    width: 100%;
-    height: 100%;
-  }
+  .strands-container { position: relative; width: 100%; height: 100%; background: transparent; }
+  .strands-container canvas { display: block; width: 100%; height: 100%; }
   
   .mention-dropdown { position: absolute; bottom: 100%; left: 20px; right: 20px; background: var(--surface); backdrop-filter: blur(20px); border: 1px solid var(--border); border-radius: 12px; margin-bottom: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); z-index: 50; }
   .mention-item { padding: 12px 14px; display: flex; align-items: center; gap: 10px; cursor: pointer; }
@@ -290,12 +282,16 @@
   .status-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--muted); }
   .status-dot.active { background: var(--accent-2); box-shadow: 0 0 6px var(--accent-2); }
 
-  /* Floating Mobile Nav Island */
   .mobile-nav { position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%); width: calc(100% - 32px); max-width: 400px; height: 56px; border: 1px solid var(--border); display: flex; justify-content: space-around; align-items: center; z-index: 40; background: var(--surface); backdrop-filter: blur(30px); border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
   .mobile-nav button { color: var(--muted); font-size: 10px; display: flex; flex-direction: column; align-items: center; gap: 2px; background: none; border: none; cursor: pointer; transition: color 0.2s; }
   .mobile-nav button.active { color: var(--accent); }
   .mobile-nav button i { font-size: 18px; }
   
+  /* Fix for mobile overlap */
+  #chatInputWrapper { padding-bottom: 10px; }
+  @media (max-width: 767px) {
+    #chatInputWrapper { padding-bottom: 80px; } 
+  }
   @media (min-width: 768px) { .mobile-nav { display: none; } .app-container { padding: 16px; } }
 </style>
 </head>
@@ -353,7 +349,7 @@
           </div>
         </div>
         <div id="chatScroll" class="flex-1 overflow-y-auto p-5 space-y-6 hide-scrollbar min-h-0" style="padding-bottom: 80px;"></div>
-        <div class="p-3 border-t flex-shrink-0 relative" style="border-color: var(--border); padding-bottom: 80px;">
+        <div id="chatInputWrapper" class="p-3 border-t flex-shrink-0 relative" style="border-color: var(--border);">
           <div id="mentionDropdown" class="mention-dropdown hidden"></div>
           <div class="louis-glass rounded-2xl p-2 flex flex-col">
             <div id="imagePreviewContainer" class="flex gap-2 p-2 hidden"></div>
@@ -488,7 +484,6 @@ var state = {
 var scriptStart = '<' + 'script>';
 var scriptEnd = '<' + '/script>';
 
-// Globally track the strands animation frame to cancel it when re-rendering
 var currentStrandRaf = null;
 
 function getSystemPrompt(agentId) {
@@ -501,15 +496,18 @@ function getSystemPrompt(agentId) {
   var availableSubs = activeAgents.filter(function(a) { return a.role === 'sub' && !a.pingOnly; });
   
   if (agent.role === 'lead' && availableSubs.length > 0) {
-    prompt += "You are the Lead Agent. You MUST delegate tasks to your team before writing final code to speed up development.\n";
-    prompt += "To delegate tasks, output EXACTLY this format: [DELEGATE: Agent Name: Task Description]\n";
-    prompt += "CRITICAL: You can output MULTIPLE [DELEGATE: ...] blocks in a single response to make agents work IN PARALLEL (at the same time). For example, delegate HTML to one agent and CSS to another simultaneously.\n";
-    prompt += "Do not write the final code yourself until your team has reported back.\n";
+    prompt += "You are the Lead Agent. Break down the project into tasks using `[todo: Task 1, Task 2]`.\n";
+    prompt += "Delegate each task to a Sub-Agent using EXACTLY this format: `[DELEGATE: Agent Name: Task Description]`.\n";
+    prompt += "CRITICAL: You can use MULTIPLE `[DELEGATE: ...]` blocks in a single response to make agents work IN PARALLEL (at the same time).\n";
+    prompt += "When Sub-Agents report back with `@LeadAgent:`, you MUST review their code for bugs or errors.\n";
+    prompt += "- If the code is correct, output `[done: task_index]` to tick off the task.\n";
+    prompt += "- If it has bugs, output another `[DELEGATE: AgentName: Fix the bug...]` to send it back.\n";
+    prompt += "Do NOT write the final code yourself until ALL tasks are `[done]`. Once all tasks are done, output the final integrated code in ```html blocks.\n";
     prompt += "Team Members available for delegation:\n";
     availableSubs.forEach(function(a) { teamList += "- " + (a.name || 'Agent') + "\n"; });
     prompt += teamList;
   } else {
-    prompt += "You are an AI Agent. Focus on your specific task. If the user tags you directly, respond to them.";
+    prompt += "You are a Sub-Agent. Focus only on your specific task. When you finish, you MUST start your response with `@LeadAgent:` and provide your code in ```html blocks.";
   }
 
   prompt += "\n\nCRITICAL FORMATTING RULES:\n1. ASK QUESTIONS if vague. Use [options: A | B | C] for single choice, [multioptions: A | B | C] for multi-choice, or [input: Placeholder] for text input.\n2. PLAN WORK: Before writing code, output a plan: [todo: Step 1, Step 2, Step 3]\n3. UPDATE PROGRESS: When starting a step output [doing: 1], when finished output [done: 1].\n4. OUTPUT CODE in ```html, ```css, ```js blocks.\n5. If you need to see console errors to fix a bug, output exactly [GET_CONSOLE].";
@@ -674,7 +672,6 @@ function setupEvents() {
   });
   chatInput.addEventListener('input', handleMentionTyping);
 
-  // Sweep animation triggers
   chatInput.addEventListener('focus', function() { document.getElementById('leftPanel').classList.add('sweep-active'); });
   chatInput.addEventListener('blur', function() { if (!state.isGenerating) document.getElementById('leftPanel').classList.remove('sweep-active'); });
 
@@ -963,86 +960,7 @@ function runAgentLoop() {
   renderChat();
   
   callAI(targetAgent, state.messages).then(function(response) {
-    var lastMsg = state.messages[state.messages.length - 1];
-    lastMsg.content = response || "[No response]";
-    lastMsg.isThinking = false;
-    renderChat();
-    addActivity(targetAgent.name, 'Replied');
-
-    if (response.includes('[GET_CONSOLE]')) {
-      var logs = document.getElementById('consoleLog').innerText;
-      state.messages.push({ role: 'user', content: 'CONSOLE LOGS:\n' + logs + '\n\nPlease analyze these logs and fix any errors in the code.', hidden: true });
-      addActivity('System', 'Fed console logs to ' + targetAgent.name);
-      runAgentLoop();
-      return;
-    }
-
-    var delegateRegex = /\[DELEGATE:\s*([^\]]+?)\s*:\s*([^\]]+?)\]/g;
-    var delegateMatches = [];
-    var m;
-    while ((m = delegateRegex.exec(response)) !== null) {
-      delegateMatches.push({ name: m[1].trim(), task: m[2].trim() });
-    }
-
-    if (targetAgent.role === 'lead' && delegateMatches.length > 0) {
-      var promises = [];
-      
-      delegateMatches.forEach(function(match) {
-        var subName = match.name;
-        var task = match.task;
-        var subAgent = activeAgents.find(function(a) { 
-          return (a.name || '').toLowerCase() === subName.toLowerCase() && a.role === 'sub' && !a.pingOnly; 
-        });
-        
-        if (subAgent) {
-          addActivity('System', targetAgent.name + ' delegated task to ' + subAgent.name);
-          state.messages.push({ role: 'user', content: 'Delegated task for ' + subAgent.name + ': ' + task, hidden: true });
-          
-          var subMsg = { role: 'assistant', content: '', agentId: subAgent.id, isThinking: true };
-          state.messages.push(subMsg);
-          renderChat();
-          addActivity(subAgent.name, 'Working on: ' + task);
-          
-          var subHistory = state.messages.filter(function(m) { return !m.isThinking; }).concat([{role: 'user', content: task}]);
-          
-          promises.push(callAI(subAgent, subHistory).then(function(subResponse) {
-            subMsg.content = subResponse || "[No response]";
-            subMsg.isThinking = false;
-            renderChat();
-            addActivity(subAgent.name, 'Finished task');
-            return { name: subAgent.name, response: subResponse };
-          }));
-        }
-      });
-      
-      if (promises.length > 0) {
-        Promise.all(promises).then(function(results) {
-            var report = "Sub-agents reported back in parallel:\n\n";
-            results.forEach(function(r) {
-                report += "--- " + r.name + " ---\n" + r.response + "\n\n";
-            });
-            report += "Please integrate all results and write the final code.";
-            
-            state.messages.push({ role: 'user', content: report, hidden: true });
-            state.messages.push({ role: 'assistant', content: '', agentId: targetAgent.id, isThinking: true });
-            renderChat();
-            addActivity(targetAgent.name, 'Integrating parallel results...');
-            
-            callAI(targetAgent, state.messages.filter(function(m) { return !m.isThinking; })).then(function(finalResponse) {
-                var leadMsg = state.messages[state.messages.length - 1];
-                leadMsg.content = finalResponse || "[No response]";
-                leadMsg.isThinking = false;
-                renderChat();
-                addActivity(targetAgent.name, 'Finalized code');
-                finishGeneration(finalResponse);
-            }).catch(handleError);
-        }).catch(handleError);
-      } else {
-        finishGeneration(response);
-      }
-    } else {
-      finishGeneration(response);
-    }
+    processResponse(targetAgent, response);
   }).catch(handleError);
   
   function handleError(err) {
@@ -1054,22 +972,109 @@ function runAgentLoop() {
     }
     finishGeneration(lastMsg ? lastMsg.content : "");
   }
-  
-  function finishGeneration(response) {
-    var files = extractFiles(response);
-    if (Object.keys(files).length > 0) {
-      state.versions.push({ time: Date.now(), files: JSON.parse(JSON.stringify(state.files)) });
-      Object.keys(files).forEach(function(k) { state.files[k] = files[k]; });
-      if (!state.activeFile) state.activeFile = 'index.html';
-      renderFileTree(); updatePreview(); setTab('preview');
-    }
-    state.isGenerating = false;
-    document.getElementById('sendBtn').classList.remove('hidden');
-    if (!document.getElementById('chatInput').matches(':focus')) {
-      document.getElementById('leftPanel').classList.remove('sweep-active');
-    }
-    saveLocal();
+}
+
+function processResponse(agent, response) {
+  var lastMsg = state.messages[state.messages.length - 1];
+  lastMsg.content = response || "[No response]";
+  lastMsg.isThinking = false;
+  renderChat();
+  addActivity(agent.name, 'Replied');
+
+  if (response.includes('[GET_CONSOLE]')) {
+    var logs = document.getElementById('consoleLog').innerText;
+    state.messages.push({ role: 'user', content: 'CONSOLE LOGS:\n' + logs + '\n\nPlease analyze these logs and fix any errors in the code.', hidden: true });
+    addActivity('System', 'Fed console logs to ' + agent.name);
+    runAgentLoop();
+    return;
   }
+
+  var delegateRegex = /\[DELEGATE:\s*([^\]]+?)\s*:\s*([^\]]+?)\]/g;
+  var delegateMatches = [];
+  var m;
+  while ((m = delegateRegex.exec(response)) !== null) {
+    delegateMatches.push({ name: m[1].trim(), task: m[2].trim() });
+  }
+
+  if (agent.role === 'lead' && delegateMatches.length > 0) {
+    var promises = [];
+    var activeAgents = state.agents.filter(function(a) { return a.isActive; });
+    
+    delegateMatches.forEach(function(match) {
+      var subName = match.name;
+      var task = match.task;
+      var subAgent = activeAgents.find(function(a) { 
+        return (a.name || '').toLowerCase() === subName.toLowerCase() && a.role === 'sub' && !a.pingOnly; 
+      });
+      
+      if (subAgent) {
+        addActivity('System', agent.name + ' delegated task to ' + subAgent.name);
+        state.messages.push({ role: 'user', content: 'Delegated task for ' + subAgent.name + ': ' + task, hidden: true });
+        
+        var subMsg = { role: 'assistant', content: '', agentId: subAgent.id, isThinking: true };
+        state.messages.push(subMsg);
+        renderChat();
+        addActivity(subAgent.name, 'Working on: ' + task);
+        
+        var subHistory = state.messages.filter(function(m) { return !m.isThinking; }).concat([{role: 'user', content: task}]);
+        
+        promises.push(callAI(subAgent, subHistory).then(function(subResponse) {
+          subMsg.content = subResponse || "[No response]";
+          subMsg.isThinking = false;
+          renderChat();
+          addActivity(subAgent.name, 'Finished task');
+          return { name: subAgent.name, response: subResponse };
+        }));
+      }
+    });
+    
+    if (promises.length > 0) {
+      Promise.all(promises).then(function(results) {
+        var report = "Sub-agents reported back in parallel:\n\n";
+        results.forEach(function(r) {
+          report += "--- " + r.name + " ---\n" + r.response + "\n\n";
+        });
+        report += "Please review their work for bugs or errors. If correct, output [done: task_number]. If bugs, output [DELEGATE: AgentName: Fix...]. If all tasks are complete, write the final integrated code in ```html blocks.";
+        
+        state.messages.push({ role: 'user', content: report, hidden: true });
+        
+        var leadAgent = activeAgents.find(function(a) { return a.role === 'lead'; }) || activeAgents[0];
+        state.messages.push({ role: 'assistant', content: '', agentId: leadAgent.id, isThinking: true });
+        renderChat();
+        addActivity(leadAgent.name, 'Reviewing parallel results...');
+        
+        callAI(leadAgent, state.messages.filter(function(m) { return !m.isThinking; })).then(function(finalResponse) {
+          processResponse(leadAgent, finalResponse);
+        }).catch(function(err) {
+          console.error("AI Error:", err);
+          finishGeneration("[Error generating response]");
+        });
+      }).catch(function(err) {
+        console.error("AI Error:", err);
+        finishGeneration("[Error generating response]");
+      });
+    } else {
+      finishGeneration(response);
+    }
+  } else {
+    finishGeneration(response);
+  }
+}
+
+function finishGeneration(response) {
+  var files = extractFiles(response);
+  if (Object.keys(files).length > 0) {
+    state.versions.push({ time: Date.now(), files: JSON.parse(JSON.stringify(state.files)) });
+    Object.keys(files).forEach(function(k) { state.files[k] = files[k]; });
+    if (!state.activeFile) state.activeFile = 'index.html';
+    renderFileTree(); updatePreview(); setTab('preview');
+  }
+  state.isGenerating = false;
+  document.getElementById('sendBtn').classList.remove('hidden');
+  if (!document.getElementById('chatInput').matches(':focus')) {
+    document.getElementById('leftPanel').classList.remove('sweep-active');
+  }
+  saveLocal();
 }
 
 function callAI(agent, history) {
@@ -1191,7 +1196,6 @@ function parseDynamicContent(text) {
   return { text: cleanText, components: components.join('') };
 }
 
-// Strands Canvas Animation Logic
 function initStrands(container) {
   if (currentStrandRaf) cancelAnimationFrame(currentStrandRaf);
   
@@ -1199,7 +1203,6 @@ function initStrands(container) {
   if (!canvas) return;
   var ctx = canvas.getContext('2d');
   
-  // Set actual canvas size
   canvas.width = container.clientWidth;
   canvas.height = container.clientHeight;
   
@@ -1219,7 +1222,7 @@ function initStrands(container) {
   
   var t = 0;
   function draw() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.clearRect(0,0,canvas.width,canvas.height);
     ctx.lineWidth = 1.5;
     
     strands.forEach(function(s) {
@@ -1244,7 +1247,6 @@ function initStrands(container) {
 }
 
 function renderChat() {
-  // Cancel previous strands animation before re-rendering HTML
   if (currentStrandRaf) {
     cancelAnimationFrame(currentStrandRaf);
     currentStrandRaf = null;
@@ -1260,7 +1262,7 @@ function renderChat() {
       return '<div class="flex justify-end mb-6">' +
         '<div class="max-w-[85%]">' +
           '<div class="text-xs mb-1 text-right" style="color: var(--muted);">You</div>' +
-          '<div class="rounded-2xl rounded-br-sm px-4 py-3 text-sm" style="background: var(--surface-2); backdrop-filter: blur(10px); color: var(--text); border: 1px solid var(--border);">' + imgHtml + content + '</div>' +
+          '<div class="rounded-2xl rounded-br-sm px-4 py-3 text-sm" style="background: var(--chat-bubble-user); color: var(--text); border: 1px solid var(--border);">' + imgHtml + content + '</div>' +
         '</div>' +
       '</div>';
     }
@@ -1272,8 +1274,7 @@ function renderChat() {
     
     var contentHtml = '';
     if (m.isThinking && m.content === '') {
-      // Replaced typing dots with Strands Container
-      contentHtml = '<div class="strands-container" style="width: 120px; height: 45px;"><canvas></canvas></div>';
+      contentHtml = '<div style="width: 180px; height: 50px;"><div class="strands-container"><canvas></canvas></div></div>';
     } else {
       var parsed = parseDynamicContent(m.content);
       var cleanText = parsed.text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -1288,7 +1289,7 @@ function renderChat() {
       pfpHtml +
       '<div class="flex-1 min-w-0 max-w-[85%]">' +
         '<div class="agent-tag" style="color: ' + agentColor + ';">' + agentName + ' ' + ((agent && agent.role === 'lead') ? '<i class="fa-solid fa-crown text-[10px] ml-1"></i>' : '') + '</div>' +
-        '<div class="text-sm leading-relaxed rounded-2xl rounded-tl-sm px-4 py-3 inline-block" style="background: var(--surface-2); backdrop-filter: blur(10px); border: 1px solid var(--border); color: var(--text);">' + contentHtml + '</div>' +
+        '<div class="text-sm leading-relaxed rounded-2xl rounded-tl-sm px-4 py-3 inline-block" style="background: var(--chat-bubble-ai); color: var(--text); border: 1px solid var(--border);">' + contentHtml + '</div>' +
         replyBtn +
       '</div>' +
     '</div>';
@@ -1296,7 +1297,6 @@ function renderChat() {
   
   attachChatEvents();
   
-  // Start Strands Animation if a thinking message is present
   var strandContainer = c.querySelector('.strands-container');
   if (strandContainer) {
     initStrands(strandContainer);
@@ -1431,7 +1431,7 @@ function renderHistory() {
 
 function saveLocal() {
   try {
-    localStorage.setItem('sakura_dev_v20', JSON.stringify({
+    localStorage.setItem('sakura_dev_v21', JSON.stringify({
       mode: state.mode, files: state.files, agents: state.agents, selectedModel: state.selectedModel, versions: state.versions
     }));
   } catch(e){}
@@ -1439,7 +1439,7 @@ function saveLocal() {
 
 function loadLocal() {
   try {
-    var s = localStorage.getItem('sakura_dev_v20');
+    var s = localStorage.getItem('sakura_dev_v21');
     if (s) {
       var p = JSON.parse(s);
       state.mode = p.mode || 'coding';
